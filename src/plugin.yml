@@ -1,0 +1,7 @@
+name: BedWars
+version: 0.1
+main: de.byteevolve.bedwars.Bedwars
+author: Royalbyte
+commands:
+  setLoc:
+  arena:
