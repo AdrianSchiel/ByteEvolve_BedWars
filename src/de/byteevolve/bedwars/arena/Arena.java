@@ -8,7 +8,7 @@ import java.util.List;
 public class Arena {
 
     private int players, teams;
-    private String name, displayname, spawn, spawnspec, bronzeraw, goldraw, ironraw, bedsraw;
+    private String name, displayname, spawn, spawnspec, bronzeraw, goldraw, ironraw, bedsraw, shopsraw, spawnsraw;
     private int finished;
 
     public Arena(String name){
@@ -23,23 +23,41 @@ public class Arena {
         if(getGoldraw() == null) setGoldraw("");
         if(getBedsraw() == null) setBedsraw("");
         if(getDisplayname() == null) setDisplayname("");
+        if(getShopsraw() == null) setShopsraw("");
+        if(getSpawnsraw() == null) setSpawnsraw("");
         if (BedWars.getInstance().getArenaHandler().existArenaByName(getName())) {
             BedWars.getInstance().getMySQL().update("UPDATE bw_arena SET " +
                     "DISPLAYNAME='" +getDisplayname() +"', SPAWN='" + getSpawn()+ "',"+
                     "SPAWNSPEC='" + getSpawnspec()+"', BRONZE='" + getBronzeraw()+"',"+
-                    "GOLD='" +getGoldraw()+ "', IRON='" +getIronraw() +"', BEDS='" +getBedsraw() +"',TEAMS='" +getTeams()+"'," +
-                    "PLAYERS='" + getPlayers()+ "', FINISHED='" + getFinished() +"' WHERE NAME='" + getName()+"';");
-            BedWars.getInstance().getArenaHandler().loadArenas(BedWars.players, BedWars.teams);
+                    "GOLD='" +getGoldraw()+ "', IRON='" +getIronraw() +"', BEDS='" +getBedsraw() +"',SHOPS='" + getShopsraw()+ "',TEAMS='" +getTeams()+"', SPAWNS='"+
+                    getSpawnsraw()+"',PLAYERS='" + getPlayers()+ "', FINISHED='" + getFinished() +"' WHERE NAME='" + getName()+"';");
+            BedWars.getInstance().getArenaHandler().loadArenas();
         } else {
             BedWars.getInstance().getMySQL().update("INSERT INTO bw_arena VALUES('" +getName() +"', '" + getDisplayname()+"','" +
                     getSpawn() +"', '" +getSpawnspec() +"', '" + getBronzeraw() +"', '" + getGoldraw()+"','" + getIronraw()+"'," +
-                    "'" + getBedsraw() +"', '" +getTeams() +"','" +getPlayers() +"', '1');");
-            BedWars.getInstance().getArenaHandler().loadArenas(BedWars.players, BedWars.teams);
+                    "'" + getBedsraw() +"','"  +getShopsraw() +"','" +getSpawnsraw() +"', '" +getTeams() +"','" +getPlayers() +"', '1');");
+            BedWars.getInstance().getArenaHandler().loadArenas();
         }
     }
 
     public String getBronzeraw() {
         return bronzeraw;
+    }
+
+    public String getSpawnsraw() {
+        return spawnsraw;
+    }
+
+    public void setSpawnsraw(String spawns) {
+        this.spawnsraw = spawns;
+    }
+
+    public void setShopsraw(String shopsraw) {
+        this.shopsraw = shopsraw;
+    }
+
+    public String getShopsraw() {
+        return shopsraw;
     }
 
     public void setBronzeraw(String bronzeraw) {

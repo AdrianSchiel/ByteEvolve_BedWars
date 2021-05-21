@@ -21,12 +21,12 @@ public class ArenaHandler {
         this.arenaEditList = new HashMap<>();
         this.arenaPlayerCreate = new HashMap<>();
 
-        loadArenas(1, 2);
+        loadArenas();
     }
 
-    public boolean loadArenas(int players, int teams) {
+    public boolean loadArenas() {
         this.arenas.clear();
-        ResultSet resultSet = BedWars.getInstance().getMySQL().getResult("SELECT * FROM `bw_arena` WHERE bw_arena.PLAYERS="+ players+" AND bw_arena.TEAMS=" +teams + ";");
+        ResultSet resultSet = BedWars.getInstance().getMySQL().getResult("SELECT * FROM `bw_arena`;");
         try {
             while (resultSet.next()) {
                 Arena arena = new Arena(resultSet.getString("NAME"));
@@ -40,6 +40,8 @@ public class ArenaHandler {
                 arena.setFinished(resultSet.getInt(("FINISHED")));
                 arena.setPlayers(resultSet.getInt(("PLAYERS")));
                 arena.setTeams(resultSet.getInt(("TEAMS")));
+                arena.setShopsraw(resultSet.getString("SHOPS"));
+                arena.setSpawnsraw(resultSet.getString("SPAWNS"));
                 this.arenas.add(arena);
             }
             return true;
@@ -47,6 +49,10 @@ public class ArenaHandler {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<Arena> getArenas() {
+        return arenas;
     }
 
     /**
