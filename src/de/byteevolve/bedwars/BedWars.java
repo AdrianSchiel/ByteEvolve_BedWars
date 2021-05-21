@@ -8,10 +8,12 @@ import de.byteevolve.bedwars.configuration.ConfigHandler;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 import de.byteevolve.bedwars.database.MySQL;
 import de.byteevolve.bedwars.itembuilder.unbreakable.*;
+import de.byteevolve.bedwars.listener.Listener_Arena;
 import de.byteevolve.bedwars.location.LocationHandler;
 import de.byteevolve.bedwars.player.actionbar.*;
 import de.byteevolve.bedwars.player.respawn.*;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -42,6 +44,9 @@ public class BedWars extends JavaPlugin {
         this.arenaHandler = new ArenaHandler();
 
         getCommand("arena").setExecutor(new Command_Arena());
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        pluginManager.registerEvents(new Listener_Arena(), this);
 
     }
 
