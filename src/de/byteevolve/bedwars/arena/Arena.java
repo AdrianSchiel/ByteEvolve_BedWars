@@ -138,7 +138,8 @@ public class Arena {
 
     public List<String> getBronze() {
         List<String> bronze = new ArrayList<>();
-        for(String s : this.bronzeraw.split(",")){
+        if(this.getBronzeraw() == null) return bronze;
+        for(String s : this.getBronzeraw().split(",")){
             bronze.add(s);
         }
         return bronze;
@@ -146,7 +147,8 @@ public class Arena {
 
     public List<String> getGold() {
         List<String> gold = new ArrayList<>();
-        for(String s : this.goldraw.split(",")){
+        if(this.getGoldraw() == null) return gold;
+        for(String s : this.getGoldraw().split(",")){
             gold.add(s);
         }
         return gold;
@@ -154,7 +156,8 @@ public class Arena {
 
     public List<String> getIron() {
         List<String> iron = new ArrayList<>();
-        for(String s : this.ironraw.split(",")){
+        if(this.getIronraw() == null) return iron;
+        for(String s : this.getIronraw().split(",")){
             iron.add(s);
         }
         return iron;
