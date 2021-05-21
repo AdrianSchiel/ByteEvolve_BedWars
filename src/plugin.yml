@@ -3,5 +3,4 @@ version: 0.1
 main: de.byteevolve.bedwars.BedWars
 author: Royalbyte
 commands:
-  setLoc:
   arena:
