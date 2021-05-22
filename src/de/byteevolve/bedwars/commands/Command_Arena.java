@@ -20,7 +20,7 @@ public class Command_Arena implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if(!player.hasPermission("GunGame.arena")) {
+        if(!player.hasPermission("BedWars.arena")) {
             player.sendMessage(BedWars.getInstance().getNoPerm());
             return true;
         }
@@ -29,8 +29,16 @@ public class Command_Arena implements CommandExecutor {
             if(args[0].equalsIgnoreCase("create")){
                 int players = Integer.parseInt(args[3]);
                 int teams = Integer.parseInt(args[2]);
+                if(teams > 8){
+                    player.sendMessage(BedWars.getInstance().getPrefix() + ConfigEntries.ARENATOMANYTEAMS.getAsString());
+                    return true;
+                }
+                if(teams < 2){
+                    player.sendMessage(BedWars.getInstance().getPrefix() + ConfigEntries.ARENATOFEWTEAMS.getAsString());
+                    return true;
+                }
                 String dpn = "";
-                for (int i = 2; i < args.length; i++) {
+                for (int i = 4; i < args.length; i++) {
                     dpn = dpn + args[i] + " ";
                 }
                 if(BedWars.getInstance().getArenaHandler().getArenaPlayerCreate().containsKey(player)){

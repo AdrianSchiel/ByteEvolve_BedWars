@@ -19,6 +19,9 @@ public enum ConfigEntries implements ConfigEntry {
     PLAYERNOTCREATESARENA(ConfigSections.MESSAGES, "playernotcreatesarena", "&7Du erstellst gerade keine Arena. (&2/arena create Name&7)", "&7Du erstellst gerade keine Arena. (&2/arena create Name&7)", "Nachricht wenn ein Spieler eine Arena mit /arena edit bearbeiten will, aber keine erstellt."),
     ARENAHELP(ConfigSections.MESSAGES, "arenahelp", "&7Nutze &c/arena &7<&ccreate&7,&cedit&7> &7<&cName&7> &7<&cTeams&7> &7<&cPlayers&7> &7<&cDisplayname&7>", "&7Nutze &c/arena &7<&ccreate&7,&cedit&7> &7<&cName&7> &7<&cTeams&7> &7<&cPlayers&7> &7<&cDisplayname&7>", "Hilfe Nachricht zum erstellen einer Arena"),
     NOARENAEXISTS(ConfigSections.MESSAGES, "noarenaexists","&cEs wurde noch keine Arena erstellt.", "&cEs wurde noch keine Arena erstellt.", "Nachricht an einen Spieler, wenn keine Arena gefunden wurde."),
+    ARENATOMANYTEAMS(ConfigSections.MESSAGES, "arenatomanyteams","&cEine Arena kann maximal 8 Teams haben.", "&cEine Arena kann maximal 8 Teams haben.", "Nachricht an einen Spieler, wenn er eine Arena mit mehr als 8 Teams erstellen will."),
+    ARENATOFEWTEAMS(ConfigSections.MESSAGES, "arenatofewteams","&cEine Arena braucht mindestens 2 Teams.", "&cEine Arena braucht mindestens 2 Teams.", "Nachricht an einen Spieler, wenn er eine Arena mit weniger als 2 Teams erstellen will."),
+    ARENAPLAYERMUSTSTANDONBED(ConfigSections.MESSAGES, "arenaplayermuststandonbed", "&cBitte stelle dich auf ein Bed.", "&cBitte stelle dich auf ein Bed.", "Nachricht an einen Spieler, wenn er nicht auf einem Bed steht."),
 
     //BUILD COMMAND
     BUILDON(ConfigSections.MESSAGES, "buildon", "&7Du bist nun im &aBuild-Modus&7.","&7Du bist nun im &aBuild-Modus&7.", "Nachricht an einen Spieler, welcher in den Build Modus geht."),
