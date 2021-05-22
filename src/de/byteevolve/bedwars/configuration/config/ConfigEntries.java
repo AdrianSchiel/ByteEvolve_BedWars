@@ -38,6 +38,8 @@ public enum ConfigEntries implements ConfigEntry {
 
     //SETTINGS
     ANTICROPTRAMPLE(ConfigSections.SETTINGS, "anticroptrample", true, true, "Einstellung um kein Pflanzen zu zertramplen"),
+    PLAYERSPERTEAM(ConfigSections.SETTINGS, "playersperteam", 1, 1, "Anzahl wie viele Spieler in einem Team sind."),
+    TEAMS(ConfigSections.SETTINGS, "teams", 2, 2, "Anzahl an Teams"),
 
     //MYSQL
     MYSQL_HOST(ConfigSections.MYSQL, "host", "localhost", "localhost", "Hostname deiner MySQl Datenbank"),
