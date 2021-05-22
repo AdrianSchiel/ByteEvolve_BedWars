@@ -1,8 +1,10 @@
 package de.byteevolve.bedwars.player;
 
+import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Arena;
 import de.byteevolve.bedwars.arena.ArenaMaterials;
 import de.byteevolve.bedwars.arena.Teams;
+import de.byteevolve.bedwars.game.Team;
 import de.byteevolve.bedwars.itembuilder.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -19,6 +21,33 @@ public class PlayerHandler {
 
     public PlayerHandler(Player player) {
         this.player = player;
+    }
+
+    public void setJoinEquip(){
+        this.player.getInventory().clear();
+        this.player.getInventory().setItem(0, new ItemBuilder(Material.BED, 1).setName("§aTeamauswahl").build());
+        this.player.getInventory().setItem(8, new ItemBuilder(Material.SLIME_BALL, 1).setName("§aStats").build());
+
+        if(BedWars.getInstance().getGameHandler().getMapVote() != null){
+            this.player.getInventory().setItem(4, new ItemBuilder(Material.EMPTY_MAP, 1).setName("§aMapauswahl").build());
+        }
+    }
+
+    public void openTeamSelection(){
+        Inventory inventory = Bukkit.createInventory(null, 1*9, "§aTeamauswahl");
+
+        for(Team team : BedWars.getInstance().getGameHandler().getTeams()){
+            ItemBuilder itemBuilder = new ItemBuilder(Material.WOOL, 1);
+            itemBuilder.setSubId(team.getTeam().getWoolid());
+            itemBuilder.setName(team.getTeam().getColor() + team.getTeam().name());
+            itemBuilder.addLore("§7ID:" + team.getTeam().getId());
+            for(Player player : team.getMembers()){
+                itemBuilder.addLore("§7»" + team.getTeam().getColor() + player.getName());
+            }
+            inventory.addItem(itemBuilder.build());
+        }
+
+        player.openInventory(inventory);
     }
 
     public void openArenaEditMainInv(Arena arena){
