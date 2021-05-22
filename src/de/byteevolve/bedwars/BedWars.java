@@ -7,8 +7,11 @@ import de.byteevolve.bedwars.commands.Command_Arena;
 import de.byteevolve.bedwars.configuration.ConfigHandler;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 import de.byteevolve.bedwars.database.MySQL;
+import de.byteevolve.bedwars.game.GameHandler;
 import de.byteevolve.bedwars.itembuilder.unbreakable.*;
 import de.byteevolve.bedwars.listener.Listener_Arena;
+import de.byteevolve.bedwars.listener.Listener_Join;
+import de.byteevolve.bedwars.listener.Listener_Team;
 import de.byteevolve.bedwars.location.LocationHandler;
 import de.byteevolve.bedwars.player.actionbar.*;
 import de.byteevolve.bedwars.player.respawn.*;
@@ -23,11 +26,11 @@ public class BedWars extends JavaPlugin {
     private MySQL mySQL;
     private LocationHandler locationHandler;
     private ArenaHandler arenaHandler;
-    public static int players, teams;
     private BWActionbar actionbar;
     private BWRespawn respawn;
     private Unbreakable unbreakable;
     private ConfigHandler configHandler;
+    private GameHandler gameHandler;
     private String prefix,noPerm, mustAPlayer,playerNotOnline;
 
     @Override
@@ -42,11 +45,16 @@ public class BedWars extends JavaPlugin {
         this.mySQL = new MySQL("localhost", "root", "", "bedwars", 3306);
         this.locationHandler = new LocationHandler();
         this.arenaHandler = new ArenaHandler();
+        this.gameHandler = new GameHandler();
 
         getCommand("arena").setExecutor(new Command_Arena());
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new Listener_Arena(), this);
+        pluginManager.registerEvents(new Listener_Join(), this);
+        pluginManager.registerEvents(new Listener_Team(), this);
+
+        loadVersions();
 
     }
 
@@ -54,7 +62,6 @@ public class BedWars extends JavaPlugin {
         String version = "N/A";
         try{
             version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-
             switch (version) {
                 case "v1_8_R3":
                     this.actionbar = new v1_8_R3_Actionbar();
@@ -105,6 +112,10 @@ public class BedWars extends JavaPlugin {
         }catch (ArrayIndexOutOfBoundsException ex){
             ex.printStackTrace();
         }
+    }
+
+    public GameHandler getGameHandler() {
+        return gameHandler;
     }
 
     public String getPrefix() {
