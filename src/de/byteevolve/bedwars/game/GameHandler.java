@@ -31,6 +31,8 @@ public class GameHandler {
         }
     }
 
+
+
     private void checkMapVote() {
         this.mapVote = new MapVote();
         for(Arena arena : BedWars.getInstance().getArenaHandler().getArenas()){
