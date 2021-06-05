@@ -7,6 +7,7 @@ import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameHandler {
 
@@ -20,6 +21,7 @@ public class GameHandler {
         this.teams = new ArrayList<>();
         loadTeams();
         checkMapVote();
+
     }
 
     private void loadTeams() {
@@ -31,8 +33,6 @@ public class GameHandler {
         }
     }
 
-
-
     private void checkMapVote() {
         this.mapVote = new MapVote();
         for(Arena arena : BedWars.getInstance().getArenaHandler().getArenas()){
@@ -41,8 +41,31 @@ public class GameHandler {
                 this.mapVote.getVotes().put(arena, 0);
             }
         }
-        if(!(this.mapVote.getVotes().size() > 1)) this.mapVote = null;
+
+        if(this.mapVote.getVotes().size() > 3) {
+            List<Arena> arenas = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                Arena arena = (Arena) this.mapVote.getVotes().keySet().toArray()[ThreadLocalRandom.current().nextInt(0, this.mapVote.getVotes().size())];
+                if (!arenas.contains(arena)) {
+                    arenas.add(arena);
+                } else {
+                    i = i - 1;
+                }
+            }
+            this.mapVote.getVotes().clear();
+            for (Arena arena : arenas){
+                this.mapVote.getVotes().put(arena, 0);
+            }
+        }
+
+        if(this.mapVote.getVotes().size() == 1){
+            this.arena = (Arena) mapVote.getVotes().keySet().toArray()[0];
+            this.mapVote = null;
+            return;
+        }
+        if(this.mapVote.getVotes().isEmpty()) this.mapVote = null;
     }
+
 
     public List<Team> getTeams() {
         return teams;
