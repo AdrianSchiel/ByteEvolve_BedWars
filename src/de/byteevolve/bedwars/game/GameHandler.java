@@ -4,9 +4,12 @@ import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Arena;
 import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameHandler {
@@ -15,10 +18,14 @@ public class GameHandler {
     private Arena arena;
     private MapVote mapVote;
     private List<Team> teams;
+    private Map<Player, VoteType> goldVoting, webVoting;
 
     public GameHandler() {
         this.gameState = GameState.LOBBY;
         this.teams = new ArrayList<>();
+        this.goldVoting = new HashMap<>();
+        this.webVoting = new HashMap<>();
+
         loadTeams();
         checkMapVote();
 
@@ -66,6 +73,21 @@ public class GameHandler {
         if(this.mapVote.getVotes().isEmpty()) this.mapVote = null;
     }
 
+    public Map<Player, VoteType> getGoldVoting() {
+        return goldVoting;
+    }
+
+    public void setGoldVoting(Map<Player, VoteType> goldVoting) {
+        this.goldVoting = goldVoting;
+    }
+
+    public Map<Player, VoteType> getWebVoting() {
+        return webVoting;
+    }
+
+    public void setWebVoting(Map<Player, VoteType> webVoting) {
+        this.webVoting = webVoting;
+    }
 
     public List<Team> getTeams() {
         return teams;
