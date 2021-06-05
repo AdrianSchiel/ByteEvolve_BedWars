@@ -29,20 +29,22 @@ public class ArenaHandler {
         ResultSet resultSet = BedWars.getInstance().getMySQL().getResult("SELECT * FROM `bw_arena`;");
         try {
             while (resultSet.next()) {
-                Arena arena = new Arena(resultSet.getString("NAME"));
-                arena.setDisplayname(resultSet.getString("DISPLAYNAME"));
-                arena.setSpawn(resultSet.getString("SPAWN"));
-                arena.setSpawnspec(resultSet.getString("SPAWNSPEC"));
-                arena.setGoldraw(resultSet.getString("GOLD"));
-                arena.setBronzeraw(resultSet.getString("BRONZE"));
-                arena.setIronraw(resultSet.getString("IRON"));
-                arena.setBedsraw(resultSet.getString("BEDS"));
-                arena.setFinished(resultSet.getInt(("FINISHED")));
-                arena.setPlayers(resultSet.getInt(("PLAYERS")));
-                arena.setTeams(resultSet.getInt(("TEAMS")));
-                arena.setShopsraw(resultSet.getString("SHOPS"));
-                arena.setSpawnsraw(resultSet.getString("SPAWNS"));
-                this.arenas.add(arena);
+                if(resultSet.getInt("FINISHED") == 1) {
+                    Arena arena = new Arena(resultSet.getString("NAME"));
+                    arena.setDisplayname(resultSet.getString("DISPLAYNAME"));
+                    arena.setSpawn(resultSet.getString("SPAWN"));
+                    arena.setSpawnspec(resultSet.getString("SPAWNSPEC"));
+                    arena.setGoldraw(resultSet.getString("GOLD"));
+                    arena.setBronzeraw(resultSet.getString("BRONZE"));
+                    arena.setIronraw(resultSet.getString("IRON"));
+                    arena.setBedsraw(resultSet.getString("BEDS"));
+                    arena.setFinished(resultSet.getInt(("FINISHED")));
+                    arena.setPlayers(resultSet.getInt(("PLAYERS")));
+                    arena.setTeams(resultSet.getInt(("TEAMS")));
+                    arena.setShopsraw(resultSet.getString("SHOPS"));
+                    arena.setSpawnsraw(resultSet.getString("SPAWNS"));
+                    this.arenas.add(arena);
+                }
             }
             return true;
         } catch (SQLException e) {
