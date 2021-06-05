@@ -11,6 +11,7 @@ import de.byteevolve.bedwars.game.GameHandler;
 import de.byteevolve.bedwars.itembuilder.unbreakable.*;
 import de.byteevolve.bedwars.listener.Listener_Arena;
 import de.byteevolve.bedwars.listener.Listener_Join;
+import de.byteevolve.bedwars.listener.Listener_MapVote;
 import de.byteevolve.bedwars.listener.Listener_Team;
 import de.byteevolve.bedwars.location.LocationHandler;
 import de.byteevolve.bedwars.player.actionbar.*;
@@ -53,6 +54,7 @@ public class BedWars extends JavaPlugin {
         pluginManager.registerEvents(new Listener_Arena(), this);
         pluginManager.registerEvents(new Listener_Join(), this);
         pluginManager.registerEvents(new Listener_Team(), this);
+        pluginManager.registerEvents(new Listener_MapVote(), this);
 
         loadVersions();
 
