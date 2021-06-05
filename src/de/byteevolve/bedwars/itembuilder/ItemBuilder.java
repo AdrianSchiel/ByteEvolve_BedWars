@@ -3,6 +3,7 @@ package de.byteevolve.bedwars.itembuilder;
 import de.byteevolve.bedwars.BedWars;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -18,7 +19,7 @@ public class ItemBuilder {
     private List<String> lore;
     private Enchantment enchantment;
     private int level;
-    private boolean unbreakable;
+    private boolean unbreakable, glow;
 
     public ItemBuilder(Material material, int count) {
         this.material = material;
@@ -40,6 +41,10 @@ public class ItemBuilder {
             if (enchantment != null) {
                 itemMeta.addEnchant(enchantment, level, true);
             }
+            if(this.glow){
+                itemMeta.addEnchant(Enchantment.OXYGEN, 0 ,true);
+                itemMeta.getItemFlags().add(ItemFlag.HIDE_ENCHANTS);
+            }
             itemStack.setItemMeta(itemMeta);
             return itemStack;
         }
@@ -49,6 +54,12 @@ public class ItemBuilder {
         this.material = material;
         return this;
     }
+
+    public ItemBuilder setGlow(boolean glow){
+        this.glow = glow;
+        return  this;
+    }
+
     public ItemBuilder addEnchant(Enchantment enchantment, int level) {
         this.enchantment = enchantment;
         this.level = level;
