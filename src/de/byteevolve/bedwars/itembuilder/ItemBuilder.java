@@ -42,8 +42,8 @@ public class ItemBuilder {
                 itemMeta.addEnchant(enchantment, level, true);
             }
             if(this.glow){
-                itemMeta.addEnchant(Enchantment.OXYGEN, 0 ,true);
-                itemMeta.getItemFlags().add(ItemFlag.HIDE_ENCHANTS);
+                itemMeta.addEnchant(Enchantment.OXYGEN, 1 ,true);
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
             itemStack.setItemMeta(itemMeta);
             return itemStack;
