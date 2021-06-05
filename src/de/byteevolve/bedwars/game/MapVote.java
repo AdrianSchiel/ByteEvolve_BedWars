@@ -27,6 +27,7 @@ public class MapVote {
         return false;
     }
 
+
     public Map<Arena, Integer> getVotes() {
         return votes;
     }
