@@ -4,17 +4,18 @@ import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Arena;
 import de.byteevolve.bedwars.arena.ArenaMaterials;
 import de.byteevolve.bedwars.arena.Teams;
+import de.byteevolve.bedwars.game.GameHandler;
 import de.byteevolve.bedwars.game.Team;
+import de.byteevolve.bedwars.game.VoteType;
 import de.byteevolve.bedwars.itembuilder.ItemBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class PlayerHandler {
 
     private final Player player;
@@ -28,9 +29,57 @@ public class PlayerHandler {
         this.player.getInventory().setItem(0, new ItemBuilder(Material.BED, 1).setName("§aTeamauswahl").build());
         this.player.getInventory().setItem(8, new ItemBuilder(Material.SLIME_BALL, 1).setName("§aStats").build());
 
-        if(BedWars.getInstance().getGameHandler().getMapVote() != null){
-            this.player.getInventory().setItem(4, new ItemBuilder(Material.EMPTY_MAP, 1).setName("§aMapauswahl").build());
+        if(this.player.hasPermission("BedWars.GameSetup")){
+            this.player.getInventory().setItem(1, new ItemBuilder(Material.BLAZE_POWDER, 1).setName("§7« §aGame§2Setup §7»").build());
         }
+
+        this.player.getInventory().setItem(4, new ItemBuilder(Material.PAPER, 1).setName("§7« §aVoting §7»").build());
+
+    }
+
+    public void openMapVote(){
+        Inventory inventory = Bukkit.createInventory(null, InventoryType.BREWING, "§7« §aMap§2Voting §7»");
+
+        inventory.setItem(3, new ItemBuilder(Material.BARRIER, 1).setName("§7« §cVote Löschen §7»").build());
+
+        GameHandler gameHandler = BedWars.getInstance().getGameHandler();
+        if(gameHandler.getMapVote() != null) {
+            if (gameHandler.getMapVote().getVotes().size() < 3) {
+                for (int i = 0; i < gameHandler.getMapVote().getVotes().size(); i++) {
+                    Arena arena = (Arena) gameHandler.getMapVote().getVotes().keySet().toArray()[i];
+                    boolean glow = false;
+                    if(gameHandler.getMapVote().hasVoted(player) && gameHandler.getMapVote().getPlayerVotes().get(player).equals(arena)) glow = true;
+                    inventory.setItem(i, new ItemBuilder(Material.PAPER, 1).setGlow(glow)
+                            .setName(arena.getDisplayname().replaceAll("&", "§"))
+                            .addLore("§a" + gameHandler.getMapVote().getVotes().get(arena) + " §2Votes")
+                            .addLore("§aName§7 » §2" + arena.getName()).build());
+                }
+            } else {
+                for (int i = 0; i < 3; i++) {
+                    Arena arena = (Arena) gameHandler.getMapVote().getVotes().keySet().toArray()[i];
+                    boolean glow = false;
+                    if(gameHandler.getMapVote().hasVoted(player) && gameHandler.getMapVote().getPlayerVotes().get(player).equals(arena)) glow = true;
+                    inventory.setItem(i, new ItemBuilder(Material.PAPER, 1).setGlow(glow)
+                            .setName(arena.getDisplayname().replaceAll("&", "§"))
+                            .addLore("§a" + gameHandler.getMapVote().getVotes().get(arena) + " §2Votes")
+                            .addLore("§aName§7 » §2" + arena.getName()).build());
+                }
+            }
+        }
+
+        player.openInventory(inventory);
+    }
+
+    public void openVoting(){
+        Inventory inventory = Bukkit.createInventory(null, InventoryType.BREWING, "§7« §aVoting §7»");
+
+        if(BedWars.getInstance().getGameHandler().getMapVote() != null) {
+            inventory.setItem(1, new ItemBuilder(Material.PAPER, 1).setName("§7« §aMap§2Voting §7»").build());
+        }
+        inventory.setItem(0, new ItemBuilder(Material.GOLD_INGOT, 1).setName("§7« §aGold§2Voting §7»").build());
+        inventory.setItem(2, new ItemBuilder(Material.WEB, 1).setName("§7« §aWeb§2Voting §7»").build());
+
+        player.openInventory(inventory);
     }
 
     public void openTeamSelection(){
@@ -130,5 +179,68 @@ public class PlayerHandler {
     }
 
 
+    public void openGoldVote() {
+        Inventory inventory = Bukkit.createInventory(null, InventoryType.HOPPER, "§7« §aGold§2Voting §7»");
+        int forGold, againstGold;
+        forGold = 0;
+        againstGold = 0;
+        if(!BedWars.getInstance().getGameHandler().getGoldVoting().isEmpty()) {
+            for (int i = 0; i < BedWars.getInstance().getGameHandler().getGoldVoting().size(); i++) {
+                Player target = (Player) BedWars.getInstance().getGameHandler().getGoldVoting().keySet().toArray()[i];
+                VoteType type = BedWars.getInstance().getGameHandler().getGoldVoting().get(target);
+                switch (type) {
+                    case FOR:
+                        forGold++;
+                        break;
+                    case AGAINST:
+                        againstGold++;
+                        break;
+                }
+            }
+        }
 
+        inventory.setItem(1, new ItemBuilder(Material.INK_SACK, 1).setSubId(10)
+                .setName("§aFür Gold Stimmen")
+                .addLore("§a" + forGold +" §2Votes")
+                .build());
+        inventory.setItem(3, new ItemBuilder(Material.INK_SACK, 1).setSubId(1)
+                .setName("§cGegen Gold Stimmen")
+                .addLore("§c" + againstGold +" §4Votes")
+                .build());
+        this.player.openInventory(inventory);
+
+    }
+
+
+    public void openWebVote() {
+        Inventory inventory = Bukkit.createInventory(null, InventoryType.HOPPER, "§7« §aWeb§2Voting §7»");
+        int forWeb, againstWeb;
+        forWeb = 0;
+        againstWeb = 0;
+        if(!BedWars.getInstance().getGameHandler().getWebVoting().isEmpty()) {
+            for (int i = 0; i < BedWars.getInstance().getGameHandler().getWebVoting().size(); i++) {
+                Player target = (Player) BedWars.getInstance().getGameHandler().getWebVoting().keySet().toArray()[i];
+                VoteType type = BedWars.getInstance().getGameHandler().getWebVoting().get(target);
+                switch (type) {
+                    case FOR:
+                        forWeb++;
+                        break;
+                    case AGAINST:
+                        againstWeb++;
+                        break;
+                }
+            }
+        }
+
+        inventory.setItem(1, new ItemBuilder(Material.INK_SACK, 1).setSubId(10)
+                .setName("§aFür Webs Stimmen")
+                .addLore("§a" + forWeb +" §2Votes")
+                .build());
+        inventory.setItem(3, new ItemBuilder(Material.INK_SACK, 1).setSubId(1)
+                .setName("§cGegen Webs Stimmen")
+                .addLore("§c" + againstWeb +" §4Votes")
+                .build());
+        this.player.openInventory(inventory);
+
+    }
 }
