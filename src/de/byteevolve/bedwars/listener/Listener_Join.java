@@ -21,6 +21,7 @@ public class Listener_Join implements Listener {
             case LOBBY:
                 PlayerHandler playerHandler = new PlayerHandler(player);
                 playerHandler.setJoinEquip();
+                BedWars.getInstance().getGameHandler().manageGameStart();
                 break;
         }
     }

@@ -4,7 +4,11 @@ import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Arena;
 import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
+import jdk.internal.org.objectweb.asm.tree.InnerClassNode;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +23,8 @@ public class GameHandler {
     private MapVote mapVote;
     private List<Team> teams;
     private Map<Player, VoteType> goldVoting, webVoting;
+    private VoteType gold, web;
+    private BukkitTask gameTimer;
 
     public GameHandler() {
         this.gameState = GameState.LOBBY;
@@ -28,6 +34,28 @@ public class GameHandler {
 
         loadTeams();
         checkMapVote();
+
+    }
+
+    public void manageGameStart(){
+            int players = Bukkit.getOnlinePlayers().size();
+            int neededPlayers = (ConfigEntries.PLAYERSPERTEAM.getAsInt() * ConfigEntries.TEAMS.getAsInt()) / 2;
+
+            if (neededPlayers == 1) neededPlayers = 2;
+
+            if (players >= neededPlayers) {
+                if (gameTimer == null) {
+                    this.gameTimer = new GameTimer().runTaskTimerAsynchronously(BedWars.getInstance(), 0, 20);
+                }
+            } else {
+                this.gameTimer.cancel();
+                this.gameTimer = null;
+                Bukkit.broadcastMessage("Zu wenige Spieler");
+            }
+    }
+
+    public void startGame() {
+
 
     }
 
@@ -112,4 +140,5 @@ public class GameHandler {
     public Arena getArena() {
         return arena;
     }
+
 }

@@ -4,6 +4,7 @@ import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Arena;
 import de.byteevolve.bedwars.arena.ArenaMaterials;
 import de.byteevolve.bedwars.arena.Teams;
+import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 import de.byteevolve.bedwars.game.GameHandler;
 import de.byteevolve.bedwars.game.Team;
 import de.byteevolve.bedwars.game.VoteType;
@@ -13,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.material.Bed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,33 @@ public class PlayerHandler {
 
         this.player.getInventory().setItem(4, new ItemBuilder(Material.PAPER, 1).setName("§7« §aVoting §7»").build());
 
+    }
+
+    public void openForceMap(){
+        Inventory inventory = Bukkit.createInventory(null, 6*9, "§7« §aForce§2Map §7»");
+
+        for (int i = 0; i < BedWars.getInstance().getArenaHandler().getArenas().size() ; i++) {
+            if(i < 6*9) {
+                Arena arena = BedWars.getInstance().getArenaHandler().getArenas().get(i);
+                if (arena.getTeams() == ConfigEntries.TEAMS.getAsInt()
+                        && arena.getPlayers() == ConfigEntries.PLAYERSPERTEAM.getAsInt()) {
+                    inventory.setItem(i, new ItemBuilder(Material.PAPER, 1)
+                            .setName(arena.getDisplayname().replaceAll("&", "§"))
+                            .addLore("§aName§7 » §2" + arena.getName()).build());
+                }
+            }
+        }
+        this.player.openInventory(inventory);
+    }
+
+
+    public void openGameSetup(){
+        Inventory inventory = Bukkit.createInventory(null, InventoryType.BREWING, "§7« §aGame§2Setup §7»");
+
+        inventory.setItem(0, new ItemBuilder(Material.GOLD_NUGGET, 1).setName("§7« §aRunde §2starten §7»").build());
+        inventory.setItem(1, new ItemBuilder(Material.PAPER, 1).setName("§7« §aForce§2Map §7»").build());
+
+        this.player.openInventory(inventory);
     }
 
     public void openMapVote(){
@@ -67,7 +96,7 @@ public class PlayerHandler {
             }
         }
 
-        player.openInventory(inventory);
+        this.player.openInventory(inventory);
     }
 
     public void openVoting(){

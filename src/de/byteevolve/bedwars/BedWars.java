@@ -7,17 +7,17 @@ import de.byteevolve.bedwars.configuration.ConfigHandler;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 import de.byteevolve.bedwars.database.MySQL;
 import de.byteevolve.bedwars.game.GameHandler;
+import de.byteevolve.bedwars.game.GameTimer;
 import de.byteevolve.bedwars.itembuilder.unbreakable.*;
-import de.byteevolve.bedwars.listener.Listener_Arena;
-import de.byteevolve.bedwars.listener.Listener_Join;
-import de.byteevolve.bedwars.listener.Listener_Voting;
-import de.byteevolve.bedwars.listener.Listener_Team;
+import de.byteevolve.bedwars.listener.*;
 import de.byteevolve.bedwars.location.LocationHandler;
 import de.byteevolve.bedwars.player.actionbar.*;
 import de.byteevolve.bedwars.player.respawn.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 public class BedWars extends JavaPlugin {
 
@@ -53,6 +53,8 @@ public class BedWars extends JavaPlugin {
         pluginManager.registerEvents(new Listener_Join(), this);
         pluginManager.registerEvents(new Listener_Team(), this);
         pluginManager.registerEvents(new Listener_Voting(), this);
+        pluginManager.registerEvents(new Listener_GameSetup(), this);
+        pluginManager.registerEvents(new Listener_Quit(), this);
 
         loadVersions();
 
