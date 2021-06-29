@@ -26,7 +26,6 @@ public class Listener_GameSetup implements Listener {
             }
         }else if(item.getType().equals(Material.GOLD_NUGGET)
                 && item.getItemMeta().getDisplayName().equalsIgnoreCase("§7« §aRunde §2starten §7»")){
-            BedWars.getInstance().getGameHandler().startGame();
         }
     }
 

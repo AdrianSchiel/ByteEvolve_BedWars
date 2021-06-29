@@ -113,7 +113,7 @@ public class Arena {
     }
 
     public String getDisplayname() {
-        return displayname;
+        return displayname.replace("&", "§");
     }
 
     public void setDisplayname(String displayname) {

@@ -10,10 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameHandler {
@@ -48,16 +50,89 @@ public class GameHandler {
                     this.gameTimer = new GameTimer().runTaskTimerAsynchronously(BedWars.getInstance(), 0, 20);
                 }
             } else {
-                this.gameTimer.cancel();
-                this.gameTimer = null;
+                if(gameTimer != null) {
+                    this.gameTimer.cancel();
+                    this.gameTimer = null;
+                }
                 Bukkit.broadcastMessage("Zu wenige Spieler");
             }
     }
 
-    public void startGame() {
-
-
+    public void loadResults(){
+        Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "GOLD:" + getGoldVotingResults().toString());
+        Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "WEB:" + getWebVotingResults().toString());
+        Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "ARENA:" + getMapVoteResult().getDisplayname());
     }
+
+
+    private Arena getMapVoteResult(){
+        if(mapVote != null){
+            Arena most = null; int arenavotes = 0;
+            for(Arena arena : mapVote.getVotes().keySet()){
+                if(mapVote.getVotes().get(arena) > arenavotes){
+                    arenavotes = mapVote.getVotes().get(arena);
+                    most = arena;
+                }
+            }
+            this.arena = most;
+            this.mapVote = null;
+            return most;
+
+
+        }else{
+            if(this.arena != null){
+                return this.arena;
+            }else{
+                return null;
+            }
+        }
+    }
+
+
+    private VoteType getWebVotingResults(){
+        int webFor=0, webAgainst=0;
+        for(Player player : getWebVoting().keySet()){
+            switch (getWebVoting().get(player)){
+                case AGAINST:
+                    webAgainst++;
+                    break;
+                case FOR:
+                    webFor++;
+                    break;
+            }
+        }
+
+        if(webFor > webAgainst){
+            this.web = VoteType.FOR;
+            return VoteType.FOR;
+        }else{
+            this.web = VoteType.AGAINST;
+            return VoteType.AGAINST;
+        }
+    }
+
+    private VoteType getGoldVotingResults(){
+        int goldFor=0, goldAgainst=0;
+        for(Player player : getGoldVoting().keySet()){
+            switch (getGoldVoting().get(player)){
+                case AGAINST:
+                    goldAgainst++;
+                    break;
+                case FOR:
+                    goldFor++;
+                    break;
+            }
+        }
+
+        if(goldFor > goldAgainst){
+            this.gold = VoteType.FOR;
+            return VoteType.FOR;
+        }else{
+            this.gold = VoteType.AGAINST;
+            return VoteType.AGAINST;
+        }
+    }
+
 
     private void loadTeams() {
         this.teams.clear();
