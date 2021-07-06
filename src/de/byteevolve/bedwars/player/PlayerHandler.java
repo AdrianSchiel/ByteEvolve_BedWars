@@ -27,6 +27,9 @@ public class PlayerHandler {
     }
 
     public void setJoinEquip(){
+        this.player.setMaxHealth(20);
+        this.player.setHealth(20);
+        this.player.setFoodLevel(20);
         this.player.getInventory().clear();
         this.player.getInventory().setItem(0, new ItemBuilder(Material.BED, 1).setName("§aTeamauswahl").build());
         this.player.getInventory().setItem(8, new ItemBuilder(Material.SLIME_BALL, 1).setName("§aStats").build());
