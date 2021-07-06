@@ -4,18 +4,14 @@ import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Arena;
 import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
-import jdk.internal.org.objectweb.asm.tree.InnerClassNode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameHandler {
@@ -36,7 +32,6 @@ public class GameHandler {
 
         loadTeams();
         checkMapVote();
-
     }
 
     public void manageGameStart(){
@@ -62,6 +57,15 @@ public class GameHandler {
         Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "GOLD:" + getGoldVotingResults().toString());
         Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "WEB:" + getWebVotingResults().toString());
         Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "ARENA:" + getMapVoteResult().getDisplayname());
+    }
+
+    public void teleportPlayers(){
+        Arena arena = this.arena;
+        for(Team team : this.teams){
+            for(Player member : team.getMembers()){
+                member.teleport(BedWars.getInstance().getLocationHandler().getLocByName(arena.getSpawns().get(team.getTeam().getId())).getAsLocation());
+            }
+        }
     }
 
 
