@@ -67,7 +67,7 @@ public class GameHandler {
 
     private Arena getMapVoteResult(){
         if(mapVote != null){
-            Arena most = null; int arenavotes = 0;
+            Arena most = null; int arenavotes = -1;
             for(Arena arena : mapVote.getVotes().keySet()){
                 if(mapVote.getVotes().get(arena) > arenavotes){
                     arenavotes = mapVote.getVotes().get(arena);
