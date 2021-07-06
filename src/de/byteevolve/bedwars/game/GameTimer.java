@@ -20,6 +20,20 @@ public class GameTimer extends BukkitRunnable {
 
         if(this.count == 10){
             gameHandler.loadResults();
+
+            for(Player player : Bukkit.getOnlinePlayers()){
+                if(gameHandler.isPlayerInTeam(player) == null){
+                    for(Team team : gameHandler.getTeams()){
+                        if(!(team.getMembers().size() >= ConfigEntries.PLAYERSPERTEAM.getAsInt())){
+                            team.getMembers().add(player);
+                            player.closeInventory();
+                            player.sendMessage(BedWars.getInstance().getPrefix() + "§7Du bist nun in Team: §a" + team.getTeam().getColor() + team.getTeam().name());
+                            break;
+                        }
+                    }
+                }
+            }
+
         }
 
 
