@@ -41,6 +41,15 @@ public class GameTimer extends BukkitRunnable {
 
         }
 
+        if(this.count == 0){
+            gameHandler.teleportPlayers();
+            for(Player player : Bukkit.getOnlinePlayers()){
+                player.getInventory().clear();
+                player.getInventory().setArmorContents(null);
+                this.cancel();
+            }
+        }
+
 
     }
 }
