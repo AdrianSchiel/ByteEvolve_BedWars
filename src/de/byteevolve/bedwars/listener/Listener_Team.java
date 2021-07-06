@@ -38,7 +38,7 @@ public class Listener_Team implements Listener {
             ItemMeta itemMeta = itemStack.getItemMeta();
             int id = Integer.valueOf(itemMeta.getLore().get(0).replaceAll("§7ID:", ""));
             Team team = BedWars.getInstance().getGameHandler().getTeams().get(id);
-            if(!(team.getMembers().size() > ConfigEntries.PLAYERSPERTEAM.getAsInt())){
+            if(!(team.getMembers().size() >= ConfigEntries.PLAYERSPERTEAM.getAsInt())){
                 if(!team.getMembers().contains(player)){
                     for(Team teams : BedWars.getInstance().getGameHandler().getTeams()){
                         if(teams.getMembers().contains(player)) teams.getMembers().remove(player);
