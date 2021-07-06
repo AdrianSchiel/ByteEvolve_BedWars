@@ -176,6 +176,13 @@ public class GameHandler {
         if(this.mapVote.getVotes().isEmpty()) this.mapVote = null;
     }
 
+    public Team isPlayerInTeam(Player player){
+        for(Team team : this.teams){
+          if(team.getMembers().contains(player)) return team;
+        }
+        return null;
+    }
+
     public Map<Player, VoteType> getGoldVoting() {
         return goldVoting;
     }
