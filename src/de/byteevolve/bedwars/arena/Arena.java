@@ -136,6 +136,15 @@ public class Arena {
         this.spawnspec = spawnspec;
     }
 
+    public List<String> getSpawns() {
+        List<String> spawns = new ArrayList<>();
+        if(this.getSpawnsraw() == null) return spawns;
+        for(String s : this.getSpawnsraw().split(",")){
+            spawns.add(s);
+        }
+        return spawns;
+    }
+
     public List<String> getBronze() {
         List<String> bronze = new ArrayList<>();
         if(this.getBronzeraw() == null) return bronze;
