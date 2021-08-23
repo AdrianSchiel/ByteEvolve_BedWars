@@ -35,6 +35,7 @@ public class BedWars extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        //test
         this.configHandler = new ConfigHandler();
         this.prefix = ConfigEntries.PREFIX.getAsString();
         this.noPerm = this.prefix + ConfigEntries.NOPERM.getAsString();
