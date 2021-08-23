@@ -32,8 +32,8 @@ public class Listener_Shop implements Listener {
                 GameHandler gameHandler = BedWars.getInstance().getGameHandler();
                 switch(event.getCurrentItem().getType()) {
                     case WOOL:
-                        Teams team = gameHandler.isPlayerInTeam(player).getTeam();
-                        player.getInventory().addItem(new ItemStack[]{(new ItemBuilder(Material.WOOL, 1)).setName(team.getColor() + "Wool").setSubId(team.getWoolid()).build()});
+                        Teams team = gameHandler.getTeam(player).getTeam();
+                        player.getInventory().addItem(new ItemBuilder(Material.WOOL, 1).setName(team.getColor() + "Wool").setSubId(team.getWoolid()).build());
                         event.setCancelled(true);
                 }
             }
