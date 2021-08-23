@@ -11,6 +11,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Bed;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class FastTimer extends BukkitRunnable {
@@ -67,17 +68,13 @@ public class FastTimer extends BukkitRunnable {
 
         if (this.count == 0) {
             gameHandler.teleportPlayers();
-            var7 = Bukkit.getOnlinePlayers().iterator();
-
-            while (var7.hasNext()) {
-                player = (Player) var7.next();
-                player.getInventory().clear();
-                player.getInventory().setArmorContents((ItemStack[]) null);
-                player.setGameMode(GameMode.SURVIVAL);
-                gameHandler.setGameState(GameState.INGAME);
+            BedWars.getInstance().getGameHandler().spawnNpcs();
+            for (Player player1 : Bukkit.getOnlinePlayers()) {
+                player1.getInventory().clear();
+                player1.getInventory().setArmorContents(null);
+                BedWars.getInstance().getGameHandler().setGameState(GameState.INGAME);
+                this.cancel();
             }
-
-            this.cancel();
         }
 
     }
