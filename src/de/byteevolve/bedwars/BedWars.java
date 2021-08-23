@@ -2,6 +2,7 @@ package de.byteevolve.bedwars;
 
 
 import de.byteevolve.bedwars.arena.ArenaHandler;
+import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.commands.Command_Arena;
 import de.byteevolve.bedwars.configuration.ConfigHandler;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
@@ -14,11 +15,16 @@ import de.byteevolve.bedwars.location.LocationHandler;
 import de.byteevolve.bedwars.player.actionbar.*;
 import de.byteevolve.bedwars.player.respawn.*;
 import de.byteevolve.bedwars.shop.ShopHandler;
+import de.byteevolve.bedwars.shop.config.ShopConfigHandler;
+import de.byteevolve.bedwars.shop.npc.Npc;
+import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.HashMap;
 
 public class BedWars extends JavaPlugin {
 
@@ -31,8 +37,9 @@ public class BedWars extends JavaPlugin {
     private Unbreakable unbreakable;
     private ConfigHandler configHandler;
     private GameHandler gameHandler;
-    private ShopHandler shopHandler;
+    private ShopConfigHandler shopConfigHandler;
     private String prefix, noPerm, mustAPlayer, playerNotOnline;
+    private HashMap<Teams, Npc> teamNpc;
 
     @Override
     public void onEnable() {
@@ -42,11 +49,12 @@ public class BedWars extends JavaPlugin {
         this.noPerm = this.prefix + ConfigEntries.NOPERM.getAsString();
         this.mustAPlayer = this.prefix + ConfigEntries.MUSTAPLAYER.getAsString();
         this.playerNotOnline = this.prefix + ConfigEntries.PLAYERNOTONLINE.getAsString();
-        this.shopHandler = new ShopHandler();
+        this.shopConfigHandler = new ShopConfigHandler();
         this.mySQL = new MySQL("localhost", "root", "", "bedwars", 3306);
         this.locationHandler = new LocationHandler();
         this.arenaHandler = new ArenaHandler();
         this.gameHandler = new GameHandler();
+        this.teamNpc = new HashMap<>();
 
         getCommand("arena").setExecutor(new Command_Arena());
 
@@ -57,7 +65,8 @@ public class BedWars extends JavaPlugin {
         pluginManager.registerEvents(new Listener_Voting(), this);
         pluginManager.registerEvents(new Listener_GameSetup(), this);
         pluginManager.registerEvents(new Listener_Quit(), this);
-
+        pluginManager.registerEvents(new Listener_Shop(), this);
+        pluginManager.registerEvents(new Listener_Npc(),this);
         loadVersions();
 
     }
@@ -144,6 +153,10 @@ public class BedWars extends JavaPlugin {
 
     public BWRespawn getRespawn() {
         return respawn;
+    }
+
+    public HashMap<Teams, Npc> getTeamNpc() {
+        return teamNpc;
     }
 
     public Unbreakable getUnbreakable() {
