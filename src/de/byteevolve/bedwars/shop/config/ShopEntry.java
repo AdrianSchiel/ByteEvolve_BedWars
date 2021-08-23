@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package de.byteevolve.bedwars.shop.config;
 
 import de.byteevolve.bedwars.configuration.ConfigEntry;
@@ -24,7 +19,7 @@ public enum ShopEntry implements ConfigEntry {
     private int defprice;
     private ConfigSections sections;
 
-    private ShopEntry(ConfigSections configSections, String path, Object value, String defvalue, int defprice, int price, String defcurrency, String currency) {
+    ShopEntry(ConfigSections configSections, String path, Object value, String defvalue, int defprice, int price, String defcurrency, String currency) {
         this.path = path;
         this.sections = configSections;
         this.defvalue = defvalue;
