@@ -13,6 +13,7 @@ import de.byteevolve.bedwars.listener.*;
 import de.byteevolve.bedwars.location.LocationHandler;
 import de.byteevolve.bedwars.player.actionbar.*;
 import de.byteevolve.bedwars.player.respawn.*;
+import de.byteevolve.bedwars.shop.ShopHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,18 +31,18 @@ public class BedWars extends JavaPlugin {
     private Unbreakable unbreakable;
     private ConfigHandler configHandler;
     private GameHandler gameHandler;
-    private String prefix,noPerm, mustAPlayer,playerNotOnline;
+    private ShopHandler shopHandler;
+    private String prefix, noPerm, mustAPlayer, playerNotOnline;
 
     @Override
     public void onEnable() {
         instance = this;
-        //test
         this.configHandler = new ConfigHandler();
         this.prefix = ConfigEntries.PREFIX.getAsString();
         this.noPerm = this.prefix + ConfigEntries.NOPERM.getAsString();
         this.mustAPlayer = this.prefix + ConfigEntries.MUSTAPLAYER.getAsString();
         this.playerNotOnline = this.prefix + ConfigEntries.PLAYERNOTONLINE.getAsString();
-
+        this.shopHandler = new ShopHandler();
         this.mySQL = new MySQL("localhost", "root", "", "bedwars", 3306);
         this.locationHandler = new LocationHandler();
         this.arenaHandler = new ArenaHandler();
@@ -61,9 +62,9 @@ public class BedWars extends JavaPlugin {
 
     }
 
-    private void loadVersions(){
+    private void loadVersions() {
         String version = "N/A";
-        try{
+        try {
             version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
             switch (version) {
                 case "v1_8_R3":
@@ -112,7 +113,7 @@ public class BedWars extends JavaPlugin {
                     this.unbreakable = new v1_16_R3_Unbreakable();
                     break;
             }
-        }catch (ArrayIndexOutOfBoundsException ex){
+        } catch (ArrayIndexOutOfBoundsException ex) {
             ex.printStackTrace();
         }
     }
