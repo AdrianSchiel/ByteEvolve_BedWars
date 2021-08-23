@@ -73,7 +73,7 @@ public class Listener_Voting implements Listener {
                 player.closeInventory();
             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals("§cGegen Webs Stimmen")) {
                 bedWars.getGameHandler().getWebVoting().put(player, VoteType.AGAINST);
-                player.sendMessage("Du hast gegen Webs gestimmt");
+                player.sendMessage("Du hast gegen Webs gestimmt test");
                 player.closeInventory();
             }
         }
