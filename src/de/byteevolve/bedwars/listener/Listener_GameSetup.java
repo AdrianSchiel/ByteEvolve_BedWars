@@ -1,3 +1,4 @@
+
 package de.byteevolve.bedwars.listener;
 
 import de.byteevolve.bedwars.BedWars;
@@ -12,35 +13,36 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class Listener_GameSetup implements Listener {
+    public Listener_GameSetup() {
+    }
 
     @EventHandler
-    public void onInterract(PlayerInteractEvent event){
+    public void onInterract(PlayerInteractEvent event) {
         ItemStack item = event.getItem();
-        if(item.getType().equals(Material.BLAZE_POWDER)
-                && item.getItemMeta().getDisplayName().equalsIgnoreCase("§7« §aGame§2Setup §7»")){
-            if(event.getPlayer().hasPermission("BedWars.GameSetup")) {
-                event.setCancelled(true);
-                if (BedWars.getInstance().getGameHandler().getGameState() == GameState.LOBBY) {
-                    new PlayerHandler(event.getPlayer()).openGameSetup();
-                }
+        if (item.getType().equals(Material.BLAZE_POWDER) && item.getItemMeta().getDisplayName().equalsIgnoreCase("§7« §aGame§2Setup §7»") && event.getPlayer().hasPermission("BedWars.GameSetup")) {
+            event.setCancelled(true);
+            if (BedWars.getInstance().getGameHandler().getGameState() == GameState.LOBBY) {
+                (new PlayerHandler(event.getPlayer())).openGameSetup();
             }
-        }else if(item.getType().equals(Material.GOLD_NUGGET)
-                && item.getItemMeta().getDisplayName().equalsIgnoreCase("§7« §aRunde §2starten §7»")){
         }
+
     }
 
     @EventHandler
-    public void onGameMenu(InventoryClickEvent event){
-        if(event.getInventory().getTitle().equals("§7« §aGame§2Setup §7»")){
-            event.setCancelled(true);
-            Player player = (Player) event.getWhoClicked();
-            if(player.hasPermission("BedWars.GameSetup")) {
+    public void onGameMenu(InventoryClickEvent event) {
+        if (event.getInventory().getTitle().equals("§7« §aGame§2Setup §7»")) {
+            Player player = (Player)event.getWhoClicked();
+            if (player.hasPermission("BedWars.GameSetup")) {
                 if (event.getCurrentItem().getItemMeta().getDisplayName().equals("§7« §aForce§2Map §7»")) {
-                    new PlayerHandler(player).openForceMap();
+                    (new PlayerHandler(player)).openForceMap();
+                    event.setCancelled(true);
+                } else if (event.getCurrentItem().getType().equals(Material.GOLD_NUGGET) && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§7« §aRunde §2starten §7»")) {
+                    BedWars.getInstance().getGameHandler().getGameTImer().cancel();
+                    BedWars.getInstance().getGameHandler().manageFastStart();
+                    event.setCancelled(true);
                 }
             }
         }
+
     }
-
-
 }
