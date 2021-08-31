@@ -15,63 +15,48 @@ import org.bukkit.material.Bed;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class FastTimer extends BukkitRunnable {
-    private int count = 11;
-
     public FastTimer() {
     }
 
-    public void run() {
-        --this.count;
-        Iterator var1 = Bukkit.getOnlinePlayers().iterator();
+    private int count = 12;
 
-        while (var1.hasNext()) {
-            Player player = (Player) var1.next();
-            player.setLevel(this.count);
+    @Override
+    public void run() {
+        count--;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.setLevel(count);
         }
 
         GameHandler gameHandler = BedWars.getInstance().getGameHandler();
-        Player player;
-        Iterator var7;
+
         if (this.count == 10) {
             gameHandler.loadResults();
-            var7 = Bukkit.getOnlinePlayers().iterator();
-
-            label46:
-            while (true) {
-                while (true) {
-                    do {
-                        if (!var7.hasNext()) {
-                            break label46;
-                        }
-
-                        player = (Player) var7.next();
-                        player.getInventory().setItem(0, new ItemStack(Material.AIR, 1));
-                        player.getInventory().setItem(1, new ItemStack(Material.AIR, 1));
-                        player.getInventory().setItem(4, new ItemStack(Material.AIR, 1));
-                    } while (gameHandler.isPlayerInTeam(player) != null);
-
-                    Iterator var4 = gameHandler.getTeams().iterator();
-
-                    while (var4.hasNext()) {
-                        Team team = (Team) var4.next();
-                        if (team.getMembers().size() < ConfigEntries.PLAYERSPERTEAM.getAsInt()) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.getInventory().setItem(0, new ItemStack(Material.AIR, 1));
+                player.getInventory().setItem(1, new ItemStack(Material.AIR, 1));
+                player.getInventory().setItem(4, new ItemStack(Material.AIR, 1));
+                if (gameHandler.isPlayerInTeam(player) == null) {
+                    for (Team team : gameHandler.getTeams()) {
+                        if (!(team.getMembers().size() >= ConfigEntries.PLAYERSPERTEAM.getAsInt())) {
                             team.getMembers().add(player);
                             player.closeInventory();
-                            String var10001 = BedWars.getInstance().getPrefix();
-                            player.sendMessage(var10001 + "§7Du bist nun in Team: §a" + team.getTeam().getColor() + team.getTeam().name());
+                            player.sendMessage(BedWars.getInstance().getPrefix() + "§7Du bist nun in Team: §a" + team.getTeam().getColor() + team.getTeam().name());
                             break;
                         }
                     }
                 }
             }
+
         }
 
         if (this.count == 0) {
             gameHandler.teleportPlayers();
             BedWars.getInstance().getGameHandler().spawnNpcs();
-            for (Player player1 : Bukkit.getOnlinePlayers()) {
-                player1.getInventory().clear();
-                player1.getInventory().setArmorContents(null);
+            new SpawnerTimer();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.getInventory().clear();
+                player.setGameMode(GameMode.SURVIVAL);
+                player.getInventory().setArmorContents(null);
                 BedWars.getInstance().getGameHandler().setGameState(GameState.INGAME);
                 this.cancel();
             }
