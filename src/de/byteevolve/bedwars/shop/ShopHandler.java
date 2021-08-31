@@ -4,24 +4,72 @@ package de.byteevolve.bedwars.shop;
 import de.byteevolve.bedwars.configuration.config.ConfigSections;
 import de.byteevolve.bedwars.itembuilder.ItemBuilder;
 import de.byteevolve.bedwars.shop.config.ShopEntry;
+
 import java.util.Locale;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 public class ShopHandler {
     public ShopHandler() {
     }
 
+
+    private Inventory setupShop() {
+        Inventory inventory = Bukkit.createInventory(null, 9 * 6, "§aShop");
+        for (int i = 0; i < 9; i++) {
+            ItemStack itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(8).setName("§r").build();
+            switch (i) {
+                case 1:
+                    itemStack = new ItemBuilder(Material.WOOD, 1).setName("§aBlocks").build();
+                    break;
+                case 2:
+                    itemStack = new ItemBuilder(Material.DIAMOND_SWORD, 1).setName("§aTools").build();
+                    break;
+                case 3:
+                    itemStack = new ItemBuilder(Material.TNT, 1).setName("§aExplosives").build();
+                    break;
+                case 4:
+                    itemStack = new ItemBuilder(Material.IRON_CHESTPLATE, 1).setName("§aArmor").build();
+                    break;
+                case 5:
+                    itemStack = new ItemBuilder(Material.WATER_BUCKET, 1).setName("§aBuckets").build();
+                    break;
+                case 6:
+                    itemStack = new ItemBuilder(Material.BOW, 1).setName("§aProjectiles").build();
+                    break;
+                case 7:
+                    itemStack = new ItemBuilder(Material.ENDER_PEARL, 1).setName("§aUtility").build();
+                    break;
+                default:
+                    itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(8).setName("§r").build();
+                    break;
+            }
+            inventory.setItem(i, itemStack);
+        }
+        for (int i = 45; i < 9 * 6; i++) {
+            ItemStack itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(8).setName("§r").build();
+            inventory.setItem(i,itemStack);
+        }
+
+        return inventory;
+    }
+
     public String getPrice(int price, String currency) {
         ChatColor chatColor;
-        if (currency.toUpperCase(Locale.ROOT).equalsIgnoreCase("IRON")) {
+        if (currency.toUpperCase(Locale.ROOT).equalsIgnoreCase("IRON_INGOT")) {
             chatColor = ChatColor.DARK_GRAY;
-        } else if (currency.toUpperCase(Locale.ROOT).equalsIgnoreCase("GOLD")) {
+        } else if (currency.toUpperCase(Locale.ROOT).equalsIgnoreCase("GOLD_INGOT")) {
             chatColor = ChatColor.GOLD;
+        }else if (currency.toUpperCase(Locale.ROOT).equalsIgnoreCase("EMERALD")) {
+            chatColor = ChatColor.GREEN;
+        }else if (currency.toUpperCase(Locale.ROOT).equalsIgnoreCase("DIAMOND")) {
+            chatColor = ChatColor.BLUE;
         } else {
             chatColor = ChatColor.RED;
         }
@@ -30,20 +78,22 @@ public class ShopHandler {
     }
 
     public void openBlockTab(Player player) {
-        Inventory inventory = Bukkit.createInventory((InventoryHolder)null, 54, "§5Blocks");
+        Inventory inventory = setupShop();
         int slot = 18;
 
-        for(int i = 0; i < ConfigSections.SHOP_BLOCKS.getShopEntries().size(); ++i) {
-            ShopEntry shopEntry = (ShopEntry)ConfigSections.SHOP_BLOCKS.getShopEntries().get(i);
-            Material material = Material.valueOf(shopEntry.getValue().toString().split(",")[0]);
-            int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[1]);
-            String currency = shopEntry.getValue().toString().split(",")[2];
-            if (slot % 9 == 0) {
-                ++slot;
-                inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
-            } else {
-                ++slot;
-                inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+        for (int i = 0; i < ConfigSections.SHOP_BLOCKS.getShopEntries().size(); ++i) {
+            ShopEntry shopEntry = (ShopEntry) ConfigSections.SHOP_BLOCKS.getShopEntries().get(i);
+            if (!shopEntry.getValue().toString().split(",")[0].equalsIgnoreCase("NONE")) {
+                Material material = Material.valueOf(shopEntry.getValue().toString().split(",")[0]);
+                int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[1]);
+                String currency = shopEntry.getValue().toString().split(",")[2];
+                if (slot % 9 == 0) {
+                    ++slot;
+                    inventory.setItem(slot, new ItemBuilder(material, 1).addLore(this.getPrice(price, currency)).build());
+                } else {
+                    ++slot;
+                    inventory.setItem(slot, new ItemBuilder(material, 1).addLore(this.getPrice(price, currency)).build());
+                }
             }
         }
 
@@ -51,20 +101,132 @@ public class ShopHandler {
     }
 
     public void openUtilityTab(Player player) {
-        Inventory inventory = Bukkit.createInventory((InventoryHolder)null, 54, "§5Utility");
+        Inventory inventory = setupShop();
         int slot = 18;
 
-        for(int i = 0; i < ConfigSections.SHOP_UTILITY.getShopEntries().size(); ++i) {
-            ShopEntry shopEntry = (ShopEntry)ConfigSections.SHOP_UTILITY.getShopEntries().get(i);
-            Material material = Material.valueOf(shopEntry.getValue().toString().split(",")[0]);
-            int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[1]);
-            String currency = shopEntry.getValue().toString().split(",")[2];
-            if (slot % 9 == 0) {
-                ++slot;
-                inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
-            } else {
-                ++slot;
-                inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+        for (int i = 0; i < ConfigSections.SHOP_UTILITY.getShopEntries().size(); ++i) {
+            ShopEntry shopEntry = (ShopEntry) ConfigSections.SHOP_UTILITY.getShopEntries().get(i);
+            if (!shopEntry.getValue().toString().split(",")[0].equalsIgnoreCase("NONE")) {
+                Material material = Material.valueOf(shopEntry.getValue().toString().split(",")[0]);
+                int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[1]);
+                String currency = shopEntry.getValue().toString().split(",")[2];
+                if (slot % 9 == 0) {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                } else {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                }
+            }
+        }
+
+        player.openInventory(inventory);
+    }
+    public void openToolTab(Player player) {
+        Inventory inventory = setupShop();
+        int slot = 18;
+
+        for (int i = 0; i < ConfigSections.SHOP_TOOLS.getShopEntries().size(); ++i) {
+            ShopEntry shopEntry = (ShopEntry) ConfigSections.SHOP_TOOLS.getShopEntries().get(i);
+            if (!shopEntry.getValue().toString().split(",")[0].equalsIgnoreCase("NONE")) {
+                Material material = Material.valueOf(shopEntry.getValue().toString().split(",")[0]);
+                int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[1]);
+                String currency = shopEntry.getValue().toString().split(",")[2];
+                if (slot % 9 == 0) {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                } else {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                }
+            }
+        }
+
+        player.openInventory(inventory);
+    }
+    public void openArmorTab(Player player) {
+        Inventory inventory = setupShop();
+        int slot = 18;
+
+        for (int i = 0; i < ConfigSections.SHOP_ARMOR.getShopEntries().size(); ++i) {
+            ShopEntry shopEntry = (ShopEntry) ConfigSections.SHOP_ARMOR.getShopEntries().get(i);
+            if (!shopEntry.getValue().toString().split(",")[0].equalsIgnoreCase("NONE")) {
+                Material material = Material.valueOf(shopEntry.getValue().toString().split(",")[0]);
+                int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[1]);
+                String currency = shopEntry.getValue().toString().split(",")[2];
+                if (slot % 9 == 0) {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                } else {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                }
+            }
+        }
+
+        player.openInventory(inventory);
+    }
+    public void openBucketTab(Player player) {
+        Inventory inventory = setupShop();
+        int slot = 18;
+
+        for (int i = 0; i < ConfigSections.SHOP_BUCKETS.getShopEntries().size(); ++i) {
+            ShopEntry shopEntry = (ShopEntry) ConfigSections.SHOP_BUCKETS.getShopEntries().get(i);
+            if (!shopEntry.getValue().toString().split(",")[0].equalsIgnoreCase("NONE")) {
+                Material material = Material.valueOf(shopEntry.getValue().toString().split(",")[0]);
+                int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[1]);
+                String currency = shopEntry.getValue().toString().split(",")[2];
+                if (slot % 9 == 0) {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                } else {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                }
+            }
+        }
+
+        player.openInventory(inventory);
+    }
+    public void openProjectileTab(Player player) {
+        Inventory inventory = setupShop();
+        int slot = 18;
+
+        for (int i = 0; i < ConfigSections.SHOP_PROJECTILES.getShopEntries().size(); ++i) {
+            ShopEntry shopEntry = (ShopEntry) ConfigSections.SHOP_PROJECTILES.getShopEntries().get(i);
+            if (!shopEntry.getValue().toString().split(",")[0].equalsIgnoreCase("NONE")) {
+                Material material = Material.valueOf(shopEntry.getValue().toString().split(",")[0]);
+                int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[1]);
+                String currency = shopEntry.getValue().toString().split(",")[2];
+                if (slot % 9 == 0) {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                } else {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                }
+            }
+        }
+
+        player.openInventory(inventory);
+    }
+    public void openExplosiveTab(Player player) {
+        Inventory inventory = setupShop();
+        int slot = 18;
+
+        for (int i = 0; i < ConfigSections.SHOP_EXPLOSIVES.getShopEntries().size(); ++i) {
+            ShopEntry shopEntry = (ShopEntry) ConfigSections.SHOP_EXPLOSIVES.getShopEntries().get(i);
+            if (!shopEntry.getValue().toString().split(",")[0].equalsIgnoreCase("NONE")) {
+                Material material = Material.valueOf(shopEntry.getValue().toString().split(",")[0]);
+                int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[1]);
+                String currency = shopEntry.getValue().toString().split(",")[2];
+                if (slot % 9 == 0) {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                } else {
+                    ++slot;
+                    inventory.setItem(slot, (new ItemBuilder(material, 1)).addLore(this.getPrice(price, currency)).build());
+                }
             }
         }
 
