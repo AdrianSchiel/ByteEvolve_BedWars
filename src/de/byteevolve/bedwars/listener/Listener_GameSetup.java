@@ -18,11 +18,13 @@ public class Listener_GameSetup implements Listener {
 
     @EventHandler
     public void onInterract(PlayerInteractEvent event) {
-        ItemStack item = event.getItem();
-        if (item.getType().equals(Material.BLAZE_POWDER) && item.getItemMeta().getDisplayName().equalsIgnoreCase("§7« §aGame§2Setup §7»") && event.getPlayer().hasPermission("BedWars.GameSetup")) {
-            event.setCancelled(true);
-            if (BedWars.getInstance().getGameHandler().getGameState() == GameState.LOBBY) {
-                (new PlayerHandler(event.getPlayer())).openGameSetup();
+        if(event.getItem() != null && event.getItem().getItemMeta()!= null){
+            ItemStack item = event.getItem();
+            if (item.getType().equals(Material.BLAZE_POWDER) && item.getItemMeta().getDisplayName().equalsIgnoreCase("§7« §aGame§2Setup §7»") && event.getPlayer().hasPermission("BedWars.GameSetup")) {
+                event.setCancelled(true);
+                if (BedWars.getInstance().getGameHandler().getGameState() == GameState.LOBBY) {
+                    (new PlayerHandler(event.getPlayer())).openGameSetup();
+                }
             }
         }
 
