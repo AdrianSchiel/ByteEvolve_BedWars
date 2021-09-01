@@ -38,6 +38,15 @@ public class LocationHandler {
         }
         return false;
     }
+    public List<Loc> getLocList(String name){
+        List<Loc> locs = new ArrayList<>();
+        for(Loc loc : getLocations()) {
+            if (loc.getName().contains(name)) {
+                locs.add(loc);
+            }
+        }
+        return locs;
+    }
 
     public boolean loadLocs(){
         getLocations().clear();

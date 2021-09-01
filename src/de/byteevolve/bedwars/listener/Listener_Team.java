@@ -20,11 +20,13 @@ public class Listener_Team implements Listener {
     @EventHandler
     public void onInterract(PlayerInteractEvent event){
         ItemStack item = event.getItem();
-        if(item.getType().equals(Material.BED)
-                && item.getItemMeta().getDisplayName().equalsIgnoreCase("§aTeamauswahl")){
+        if(event.getItem() != null && event.getItem().getItemMeta()!= null) {
+            if (item.getType().equals(Material.BED)
+                    && item.getItemMeta().getDisplayName().equalsIgnoreCase("§aTeamauswahl")) {
                 event.setCancelled(true);
-            if(BedWars.getInstance().getGameHandler().getGameState() == GameState.LOBBY){
-                new PlayerHandler(event.getPlayer()).openTeamSelection();
+                if (BedWars.getInstance().getGameHandler().getGameState() == GameState.LOBBY) {
+                    new PlayerHandler(event.getPlayer()).openTeamSelection();
+                }
             }
         }
     }

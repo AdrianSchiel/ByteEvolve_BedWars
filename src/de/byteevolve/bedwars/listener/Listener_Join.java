@@ -61,6 +61,10 @@ public class Listener_Join implements Listener {
 
                         player.setGameMode(GameMode.SPECTATOR);
                     }
+                    break;
+                default:
+                    event.setJoinMessage(null);
+                    break;
             }
 
         }

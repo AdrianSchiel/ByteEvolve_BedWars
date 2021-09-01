@@ -30,6 +30,9 @@ public class Listener_Quit implements Listener {
                     String prefix = BedWars.getInstance().getPrefix();
                     event.setQuitMessage(prefix + "§8Der Spieler " + team.getTeam().getColor() + player.getName() + " §8hat das Spiel §cverlassen");
                 }
+            default:
+                event.setQuitMessage(null);
+                 break;
         }
 
     }

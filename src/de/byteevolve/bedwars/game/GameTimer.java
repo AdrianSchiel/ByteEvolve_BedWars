@@ -3,6 +3,7 @@ package de.byteevolve.bedwars.game;
 import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -44,8 +45,10 @@ public class GameTimer extends BukkitRunnable {
         if (this.count == 0) {
             gameHandler.teleportPlayers();
             BedWars.getInstance().getGameHandler().spawnNpcs();
+            new SpawnerTimer();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.getInventory().clear();
+                player.setGameMode(GameMode.SURVIVAL);
                 player.getInventory().setArmorContents(null);
                 BedWars.getInstance().getGameHandler().setGameState(GameState.INGAME);
                 this.cancel();

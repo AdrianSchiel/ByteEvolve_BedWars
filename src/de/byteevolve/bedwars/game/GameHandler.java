@@ -40,6 +40,9 @@ public class GameHandler {
         this.teams = new ArrayList();
         this.goldVoting = new HashMap();
         this.webVoting = new HashMap();
+        if (!BedWars.getInstance().getArenaHandler().getArenas().isEmpty()) {
+            this.arena = BedWars.getInstance().getArenaHandler().getArenas().get(0);
+        }
         this.loadTeams();
         this.checkMapVote();
     }
@@ -61,7 +64,7 @@ public class GameHandler {
                 this.gameTimer = null;
             }
 
-            Bukkit.broadcastMessage("Zu wenige Spieler");
+            Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8Es sind zu wenige Spieler auf dem Servver!");
         }
 
     }
@@ -83,55 +86,49 @@ public class GameHandler {
                 this.fastTimer = null;
             }
 
-            Bukkit.broadcastMessage("Zu wenige Spieler");
+            Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8Es sind zu wenige Spieler auf dem Servver!");
         }
 
     }
 
     public void loadResults() {
-        String var10000 = BedWars.getInstance().getPrefix();
-        Bukkit.broadcastMessage(var10000 + "GOLD:" + this.getGoldVotingResults().toString());
-        var10000 = BedWars.getInstance().getPrefix();
-        Bukkit.broadcastMessage(var10000 + "WEB:" + this.getWebVotingResults().toString());
-        var10000 = BedWars.getInstance().getPrefix();
-        Bukkit.broadcastMessage(var10000 + "ARENA:" + this.getMapVoteResult().getDisplayname());
+        Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8GOLD: §a" + getGoldVotingResults().toString());
+        Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8WEB: §a" + getWebVotingResults().toString());
+        System.out.println(getMapVoteResult());
+        Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8ARENA: §a" + getMapVoteResult().getDisplayname());
     }
 
     public void teleportPlayers() {
         Arena arena = this.arena;
-        Iterator var2 = this.teams.iterator();
-
-        while (var2.hasNext()) {
-            Team team = (Team) var2.next();
-            Iterator var4 = team.getMembers().iterator();
-
-            while (var4.hasNext()) {
-                Player member = (Player) var4.next();
-                member.teleport(BedWars.getInstance().getLocationHandler().getLocByName((String) arena.getSpawns().get(team.getTeam().getId())).getAsLocation());
+        for (Team team : this.teams) {
+            for (Player member : team.getMembers()) {
+                member.teleport(BedWars.getInstance().getLocationHandler().getLocByName(arena.getSpawns().get(team.getTeam().getId())).getAsLocation());
             }
         }
-
     }
 
     private Arena getMapVoteResult() {
-        if (this.mapVote != null) {
+        if (mapVote != null) {
             Arena most = null;
             int arenavotes = -1;
-            Iterator var3 = this.mapVote.getVotes().keySet().iterator();
-
-            while (var3.hasNext()) {
-                Arena arena = (Arena) var3.next();
-                if ((Integer) this.mapVote.getVotes().get(arena) > arenavotes) {
-                    arenavotes = (Integer) this.mapVote.getVotes().get(arena);
+            for (Arena arena : mapVote.getVotes().keySet()) {
+                System.out.println(arena.getName());
+                if (mapVote.getVotes().get(arena) > arenavotes) {
+                    arenavotes = mapVote.getVotes().get(arena);
                     most = arena;
                 }
             }
-
             this.arena = most;
             this.mapVote = null;
             return most;
+
+
         } else {
-            return this.arena != null ? this.arena : null;
+            if (this.arena != null) {
+                return this.arena;
+            } else {
+                return null;
+            }
         }
     }
 
@@ -198,46 +195,35 @@ public class GameHandler {
 
     private void checkMapVote() {
         this.mapVote = new MapVote();
-        Iterator var1 = BedWars.getInstance().getArenaHandler().getArenas().iterator();
-
-        while (var1.hasNext()) {
-            Arena arena = (Arena) var1.next();
-            if (arena.getTeams() == ConfigEntries.TEAMS.getAsInt() && arena.getPlayers() == ConfigEntries.PLAYERSPERTEAM.getAsInt()) {
+        for (Arena arena : BedWars.getInstance().getArenaHandler().getArenas()) {
+            if (arena.getTeams() == ConfigEntries.TEAMS.getAsInt()
+                    && arena.getPlayers() == ConfigEntries.PLAYERSPERTEAM.getAsInt()) {
                 this.mapVote.getVotes().put(arena, 0);
             }
         }
 
         if (this.mapVote.getVotes().size() > 3) {
-            List<Arena> arenas = new ArrayList();
-
-            Arena arena;
-            for (int i = 0; i < 3; ++i) {
-                arena = (Arena) this.mapVote.getVotes().keySet().toArray()[ThreadLocalRandom.current().nextInt(0, this.mapVote.getVotes().size())];
+            List<Arena> arenas = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                Arena arena = (Arena) this.mapVote.getVotes().keySet().toArray()[ThreadLocalRandom.current().nextInt(0, this.mapVote.getVotes().size())];
                 if (!arenas.contains(arena)) {
                     arenas.add(arena);
                 } else {
-                    --i;
+                    i = i - 1;
                 }
             }
-
             this.mapVote.getVotes().clear();
-            Iterator var6 = arenas.iterator();
-
-            while (var6.hasNext()) {
-                arena = (Arena) var6.next();
+            for (Arena arena : arenas) {
                 this.mapVote.getVotes().put(arena, 0);
             }
         }
 
         if (this.mapVote.getVotes().size() == 1) {
-            this.arena = (Arena) this.mapVote.getVotes().keySet().toArray()[0];
+            this.arena = (Arena) mapVote.getVotes().keySet().toArray()[0];
             this.mapVote = null;
-        } else {
-            if (this.mapVote.getVotes().isEmpty()) {
-                this.mapVote = null;
-            }
-
+            return;
         }
+        if (this.mapVote.getVotes().isEmpty()) this.mapVote = null;
     }
 
     public Team isPlayerInTeam(Player player) {
@@ -274,12 +260,13 @@ public class GameHandler {
     public void spawnNpcs() {
         HashMap<Teams, Npc> teamNpc = BedWars.getInstance().getTeamNpc();
         if (teamNpc.get(getTeams().get(0)) == null) {
-            for (Team teams : getTeams()) {
+            for (int i = 0; i < getTeams().size(); i++) {
+                Team teams = getTeams().get(i);
                 for (Player player : teams.getMembers()) {
                     Arena arena = getArena();
                     Loc loc = new LocationHandler().getLocByName(arena.getName() + "team" + teams.getTeam().getId() + "shop");
                     Location location = loc.getAsLocation();
-                    Npc npc = new Npc(teams.getTeam().getColor() + "Shopkeeper", location, 1 + getTeams().size(), teams.getTeam());
+                    Npc npc = new Npc(teams.getTeam().getColor() + "Shopkeeper", location, 1 + i, teams.getTeam());
                     npc.changeSkin(player);
                     npc.spawn(player);
                     teamNpc.put(teams.getTeam(), npc);
@@ -295,7 +282,7 @@ public class GameHandler {
                 if (i == 10) {
                     for (Team teams : getTeams()) {
                         Npc npc = teamNpc.get(teams.getTeam());
-                        for(Player player : Bukkit.getOnlinePlayers()){
+                        for (Player player : Bukkit.getOnlinePlayers()) {
                             npc.spawn(player);
                         }
                         i = 0;
