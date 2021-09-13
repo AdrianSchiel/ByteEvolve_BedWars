@@ -67,6 +67,7 @@ public class BedWars extends JavaPlugin {
         pluginManager.registerEvents(new Listener_Quit(), this);
         pluginManager.registerEvents(new Listener_Shop(), this);
         pluginManager.registerEvents(new Listener_Npc(),this);
+        pluginManager.registerEvents(new Listener_Bed_Break(),this);
         loadVersions();
 
     }
