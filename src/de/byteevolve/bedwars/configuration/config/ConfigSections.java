@@ -16,6 +16,7 @@ public enum ConfigSections implements ConfigSection {
     SHOP_UTILITY("utility tab", "Alle Utility Items"),
     SHOP_BLOCKS("blocks tab", "Alle Blöcke"),
     SHOP_TOOLS("tools tab", "Alle Werkzeuge"),
+    SHOP_TABS("tab names", "Namen der Tabs"),
     SHOP_CURRENCY("currency tab","Alle Währungen"),
     SHOP_PROJECTILES("projectile tab", "Alle Projektile Items"),
     SHOP_BUCKETS("bucket tab", "Alle Eimer"),

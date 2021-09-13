@@ -45,7 +45,9 @@ public class ShopConfigHandler {
             if (!configuration.contains(var10001 + "." + entry.getPath())) {
                 var10001 = entry.getSection().getName() + "." + entry.getPath();
                 Object var10002 = entry.getValue();
-                configuration.set(var10001, var10002 + "," + entry.getPrice() + "," + entry.getCurrency());
+                if(entry.getDefprice() == 0){
+                    configuration.set(var10001, var10002 + "," + entry.getCurrency());
+                }
             } else {
                 String var10 = entry.getSection().getName();
                 entry.setValue(configuration.get(var10 + "." + entry.getPath()));

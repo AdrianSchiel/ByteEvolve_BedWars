@@ -9,6 +9,14 @@ public enum ShopEntry implements ConfigEntry {
     CURRENCY2(ConfigSections.SHOP_CURRENCY, "CURRENCY_2", "IRON", "IRON", 0, 0, "IRON", "IRON"),
     CURRENCY3(ConfigSections.SHOP_CURRENCY, "CURRENCY_3", "GOLD", "GOLD", 0, 0, "GOLD", "GOLD"),
 
+    TAB1(ConfigSections.SHOP_TABS,"TAB_1","§aBlocks","§aBlocks",0,0,Material.WOOD.name(),Material.WOOD.name()),
+    TAB2(ConfigSections.SHOP_TABS,"TAB_2","§aTools","§aTools",0,0,Material.DIAMOND_SWORD.name(),Material.DIAMOND_SWORD.name()),
+    TAB3(ConfigSections.SHOP_TABS,"TAB_3","§aExplosives","§aExplosives",0,0,Material.TNT.name(),Material.TNT.name()),
+    TAB4(ConfigSections.SHOP_TABS,"TAB_4","§aArmor","§aArmor",0,0,Material.IRON_CHESTPLATE.name(),Material.IRON_CHESTPLATE.name()),
+    TAB5(ConfigSections.SHOP_TABS,"TAB_5","§aBuckets","§aBuckets",0,0,Material.BUCKET.name(),Material.BUCKET.name()),
+    TAB6(ConfigSections.SHOP_TABS,"TAB_6","§aProjectiles","§aProjectiles",0,0,Material.BOW.name(),Material.BOW.name()),
+    TAB7(ConfigSections.SHOP_TABS,"TAB_7","§aUtility","§aUtility",0,0,Material.ENDER_PEARL.name(),Material.ENDER_PEARL.name()),
+
     UTILITY1(ConfigSections.SHOP_UTILITY, "UTILITY_1", "SANDSTONE", "SANDSTONE", 10, 10, "GOLD", "GOLD"),
     UTILITY2(ConfigSections.SHOP_UTILITY, "UTILITY_2", "SANDSTONE", "WOOL", 10, 10, "IRON", "IRON"),
     UTILITY3(ConfigSections.SHOP_UTILITY, "UTILITY_3", "SANDSTONE", "STONE", 10, 10, "IRON", "IRON"),

@@ -26,25 +26,25 @@ public class ShopHandler {
             ItemStack itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(8).setName("§r").build();
             switch (i) {
                 case 1:
-                    itemStack = new ItemBuilder(Material.WOOD, 1).setName("§aBlocks").build();
+                    itemStack = new ItemBuilder(Material.valueOf(ShopEntry.TAB1.getValue().toString().split(",")[1]), 1).setName(ShopEntry.TAB1.getValue().toString().split(",")[0]).build();
                     break;
                 case 2:
-                    itemStack = new ItemBuilder(Material.DIAMOND_SWORD, 1).setName("§aTools").build();
+                    itemStack = new ItemBuilder(Material.valueOf(ShopEntry.TAB2.getValue().toString().split(",")[1]), 1).setName(ShopEntry.TAB2.getValue().toString().split(",")[0]).build();
                     break;
                 case 3:
-                    itemStack = new ItemBuilder(Material.TNT, 1).setName("§aExplosives").build();
+                    itemStack = new ItemBuilder(Material.valueOf(ShopEntry.TAB3.getValue().toString().split(",")[1]), 1).setName(ShopEntry.TAB3.getValue().toString().split(",")[0]).build();
                     break;
                 case 4:
-                    itemStack = new ItemBuilder(Material.IRON_CHESTPLATE, 1).setName("§aArmor").build();
+                    itemStack = new ItemBuilder(Material.valueOf(ShopEntry.TAB4.getValue().toString().split(",")[1]), 1).setName(ShopEntry.TAB4.getValue().toString().split(",")[0]).build();
                     break;
                 case 5:
-                    itemStack = new ItemBuilder(Material.WATER_BUCKET, 1).setName("§aBuckets").build();
+                    itemStack = new ItemBuilder(Material.valueOf(ShopEntry.TAB5.getValue().toString().split(",")[1]), 1).setName(ShopEntry.TAB5.getValue().toString().split(",")[0]).build();
                     break;
                 case 6:
-                    itemStack = new ItemBuilder(Material.BOW, 1).setName("§aProjectiles").build();
+                    itemStack = new ItemBuilder(Material.valueOf(ShopEntry.TAB6.getValue().toString().split(",")[1]), 1).setName(ShopEntry.TAB6.getValue().toString().split(",")[0]).build();
                     break;
                 case 7:
-                    itemStack = new ItemBuilder(Material.ENDER_PEARL, 1).setName("§aUtility").build();
+                    itemStack = new ItemBuilder(Material.valueOf(ShopEntry.TAB7.getValue().toString().split(",")[1]), 1).setName(ShopEntry.TAB7.getValue().toString().split(",")[0]).build();
                     break;
                 default:
                     itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(8).setName("§r").build();
