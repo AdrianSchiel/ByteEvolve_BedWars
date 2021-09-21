@@ -41,7 +41,10 @@ public class ShopConfigHandler {
 
         for (ShopEntry entry : ShopEntry.values()) {
             if (!configuration.contains(entry.getSection().getName() + "." + entry.getPath())) {
-                configuration.set(entry.getSection().getName() + "." + entry.getPath(), entry.getDefaultValue() + "," + entry.getDefprice() + "," + entry.getDefcurrency());
+                if (entry.getDefMaterial() != null) {
+                    configuration.set(entry.getSection().getName() + "." + entry.getPath(), entry.getDefaultValue() + "," + entry.getDefMaterial() + ","+ entry.getDefSub() );
+                } else
+                    configuration.set(entry.getSection().getName() + "." + entry.getPath(), entry.getDefaultValue() + "," + entry.getDefname() + ","+ entry.getDefSub()+ "," + entry.getDefprice() + "," + entry.getDefcurrency());
             } else {
                 entry.setValue(configuration.get(entry.getSection().getName() + "." + entry.getPath()));
             }
