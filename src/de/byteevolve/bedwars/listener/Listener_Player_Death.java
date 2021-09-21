@@ -3,6 +3,7 @@ package de.byteevolve.bedwars.listener;
 import com.mojang.authlib.BaseUserAuthentication;
 import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Teams;
+import de.byteevolve.bedwars.game.EndTime;
 import de.byteevolve.bedwars.game.GameHandler;
 import de.byteevolve.bedwars.game.Team;
 import org.bukkit.Bukkit;
@@ -27,15 +28,9 @@ public class Listener_Player_Death implements Listener {
             event.getEntity().spigot().respawn();
             event.getEntity().setGameMode(GameMode.SPECTATOR);
             if (isOver()) {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.setGameMode(GameMode.ADVENTURE);
-                    player.getInventory().clear();
-                    player.teleport(BedWars.getInstance().getLocationHandler().getLocByName(BedWars.getInstance().getGameHandler().getArena().getName() + "lobby").getAsLocation());
-                }
-                System.out.println("OVER");
-                Bukkit.shutdown();
-            } else
-                System.out.println("NOT OVER");
+                Location location = BedWars.getInstance().getLocationHandler().getLocByName(BedWars.getInstance().getGameHandler().getArena().getName() + "lobby").getAsLocation();
+                new EndTime(BedWars.getInstance().getGameHandler().getTeam(event.getEntity()).getTeam(), location);
+            }
 
         } else {
             event.getEntity().spigot().respawn();
@@ -58,8 +53,7 @@ public class Listener_Player_Death implements Listener {
         if (BedWars.getInstance().getGameHandler().getTeams().size() == 1) {
             BedWars.getInstance().getGameHandler().setDone();
             return true;
-        }else
-            System.out.println(BedWars.getInstance().getGameHandler().getTeams().size());
+        } else
         return false;
     }
 }
