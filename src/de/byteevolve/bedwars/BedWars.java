@@ -17,6 +17,7 @@ import de.byteevolve.bedwars.player.respawn.*;
 import de.byteevolve.bedwars.shop.ShopHandler;
 import de.byteevolve.bedwars.shop.config.ShopConfigHandler;
 import de.byteevolve.bedwars.shop.npc.Npc;
+import de.byteevolve.bedwars.spawner.config.SpawnerConfigHandler;
 import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -38,6 +39,7 @@ public class BedWars extends JavaPlugin {
     private ConfigHandler configHandler;
     private GameHandler gameHandler;
     private ShopConfigHandler shopConfigHandler;
+    private SpawnerConfigHandler spawnerConfigHandler;
     private String prefix, noPerm, mustAPlayer, playerNotOnline;
     private HashMap<Teams, Npc> teamNpc;
 
@@ -54,6 +56,7 @@ public class BedWars extends JavaPlugin {
         this.locationHandler = new LocationHandler();
         this.arenaHandler = new ArenaHandler();
         this.gameHandler = new GameHandler();
+        this.spawnerConfigHandler = new SpawnerConfigHandler();
         this.teamNpc = new HashMap<>();
 
         getCommand("arena").setExecutor(new Command_Arena());
@@ -67,6 +70,8 @@ public class BedWars extends JavaPlugin {
         pluginManager.registerEvents(new Listener_Quit(), this);
         pluginManager.registerEvents(new Listener_Shop(), this);
         pluginManager.registerEvents(new Listener_Npc(),this);
+        pluginManager.registerEvents(new Listener_Bed_Break(),this);
+        pluginManager.registerEvents(new Listener_Player_Death(),this);
         loadVersions();
 
     }

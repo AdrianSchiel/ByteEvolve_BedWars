@@ -51,14 +51,16 @@ public class ConfigHandler {
     public String getHeader(){
         String header = "Das ist der Header der Configuration, hier gibt es alle Beschreibungen";
 
-        for(ConfigSections section : ConfigSections.values()){
-            String desc = "\n----" + section.getName() + "----\n Beschreibung: " + section.getDescription() + "\n";
+        for(ConfigSections section : ConfigSections.values()) {
+            if (!section.getName().contains("tab")) {
+                String desc = "\n----" + section.getName() + "----\n Beschreibung: " + section.getDescription() + "\n";
 
-            for(ConfigEntries entrie : section.getEntries()){
-                desc = desc + "\r\n " + entrie.getPath() + ": \n" + entrie.getDescription() + "\n Default-Value: "
-                        + entrie.getDefaultValue() + "\r\n";
+                for (ConfigEntries entrie : section.getEntries()) {
+                    desc = desc + "\r\n " + entrie.getPath() + ": \n" + entrie.getDescription() + "\n Default-Value: "
+                            + entrie.getDefaultValue() + "\r\n";
+                }
+                header = header + desc;
             }
-            header = header + desc;
         }
 
         return header;

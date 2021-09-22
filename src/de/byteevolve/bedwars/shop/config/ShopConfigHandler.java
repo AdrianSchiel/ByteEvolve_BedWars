@@ -5,10 +5,13 @@
 
 package de.byteevolve.bedwars.shop.config;
 
+import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 import de.byteevolve.bedwars.configuration.config.ConfigSections;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ShopConfigHandler {
@@ -28,58 +31,47 @@ public class ShopConfigHandler {
             }
         }
 
-        new YamlConfiguration();
-        YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration configuration = new YamlConfiguration().loadConfiguration(file);
         configuration.options().copyDefaults(true);
-        String header = this.getHeader();
+
+        String header = getHeader();
         if (!header.equals(configuration.options().header())) {
             configuration.options().header(header);
         }
 
-        ShopEntry[] var4 = ShopEntry.values();
-        int var5 = var4.length;
-
-        for(int var6 = 0; var6 < var5; ++var6) {
-            ShopEntry entry = var4[var6];
-            String var10001 = entry.getSection().getName();
-            if (!configuration.contains(var10001 + "." + entry.getPath())) {
-                var10001 = entry.getSection().getName() + "." + entry.getPath();
-                Object var10002 = entry.getValue();
-                configuration.set(var10001, var10002 + "," + entry.getPrice() + "," + entry.getCurrency());
+        for (ShopEntry entry : ShopEntry.values()) {
+            if (!configuration.contains(entry.getSection().getName() + "." + entry.getPath())) {
+                if (entry.getDefMaterial() != null) {
+                    configuration.set(entry.getSection().getName() + "." + entry.getPath(), entry.getDefaultValue() + "," + entry.getDefMaterial() + ","+ entry.getDefSub() );
+                } else
+                    configuration.set(entry.getSection().getName() + "." + entry.getPath(), entry.getDefaultValue() + "," + entry.getDefname() + ","+ entry.getDefSub()+ "," + entry.getDefprice() + "," + entry.getDefcurrency());
             } else {
-                String var10 = entry.getSection().getName();
-                entry.setValue(configuration.get(var10 + "." + entry.getPath()));
+                entry.setValue(configuration.get(entry.getSection().getName() + "." + entry.getPath()));
             }
         }
 
         try {
             configuration.save(file);
-        } catch (IOException var8) {
-            var8.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
 
     public String getHeader() {
         String header = "Das ist der Header der Configuration, hier gibt es alle Beschreibungen";
-        ConfigSections[] var2 = ConfigSections.values();
-        int var3 = var2.length;
+        for (ConfigSections section : ConfigSections.values()) {
+            if (section.getName().contains("tab")) {
+                String desc = "\n----" + section.getName() + "----\n Beschreibung: " + section.getDescription() + "\n";
 
-        for(int var4 = 0; var4 < var3; ++var4) {
-            ConfigSections section = var2[var4];
-            if (section.toString().contains("SHOP_")) {
-                String var10000 = section.getName();
-                String desc = "\n----" + var10000 + "----\n Beschreibung: " + section.getDescription() + "\n";
-
-                ShopEntry entrie;
-                for(Iterator var7 = section.getShopEntries().iterator(); var7.hasNext(); desc = desc + "\r\n " + entrie.getPath() + ": \n Default-Value: " + entrie.getDefaultValue() + ":" + entrie.getDefprice() + "," + entrie.getDefcurrency() + "\r\n") {
-                    entrie = (ShopEntry)var7.next();
+                for (ConfigEntries entrie : section.getEntries()) {
+                    desc = desc + "\r\n " + entrie.getPath() + ": \n" + entrie.getDescription() + "\n Default-Value: "
+                            + entrie.getDefaultValue() + "\r\n";
                 }
-
                 header = header + desc;
             }
         }
-
         return header;
     }
+
 }

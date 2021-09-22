@@ -34,19 +34,23 @@ public class GameHandler {
     private VoteType web;
     private BukkitTask gameTimer;
     private BukkitTask fastTimer;
+    private boolean isDone;
 
     public GameHandler() {
         this.gameState = GameState.LOBBY;
         this.teams = new ArrayList();
         this.goldVoting = new HashMap();
         this.webVoting = new HashMap();
+        this.isDone = false;
         if (!BedWars.getInstance().getArenaHandler().getArenas().isEmpty()) {
             this.arena = BedWars.getInstance().getArenaHandler().getArenas().get(0);
         }
         this.loadTeams();
         this.checkMapVote();
     }
-
+    public void setDone(){
+        isDone = true;
+    }
     public void manageGameStart() {
         int players = Bukkit.getOnlinePlayers().size();
         int neededPlayers = ConfigEntries.PLAYERSPERTEAM.getAsInt() * ConfigEntries.TEAMS.getAsInt() / 2;

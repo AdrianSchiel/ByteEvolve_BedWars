@@ -20,7 +20,7 @@ public class Listener_Team implements Listener {
     @EventHandler
     public void onInterract(PlayerInteractEvent event){
         ItemStack item = event.getItem();
-        if(event.getItem() != null && event.getItem().getItemMeta()!= null) {
+        if(event.getItem() != null && event.getItem().getItemMeta()!= null && event.getItem().getItemMeta().getDisplayName() != null) {
             if (item.getType().equals(Material.BED)
                     && item.getItemMeta().getDisplayName().equalsIgnoreCase("§aTeamauswahl")) {
                 event.setCancelled(true);
