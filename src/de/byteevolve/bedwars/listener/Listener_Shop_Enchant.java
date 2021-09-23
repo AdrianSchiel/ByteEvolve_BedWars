@@ -32,18 +32,22 @@ public class Listener_Shop_Enchant implements Listener {
                             if (event.getCurrentItem().getItemMeta().getLore().contains("Sharpness")) {
                                 if (team.getSharpness() == 5) {
                                     player.sendMessage(BedWars.getInstance().getPrefix() + "§8You are at the maximum sharpness level");
-                                } else
+                                } else{
                                     team.setSharpness(team.getSharpness() + 1);
+                                    enchantforTeam(team, Enchantment.DAMAGE_ALL, "SWORD");
+                            }
                                 event.setCancelled(true);
-                                enchantforTeam(team, Enchantment.DAMAGE_ALL, "SWORD");
+                                
                             }
                         } else if (event.getCurrentItem().getItemMeta().getLore().contains("Efficiency")) {
                             if (team.getEfficiency() == 5) {
                                 player.sendMessage(BedWars.getInstance().getPrefix() + "§8You are at the maximum efficiency level");
-                            } else
+                            } else{
                                 team.setEfficiency(team.getEfficiency() + 1);
+                                enchantforTeam(team, Enchantment.DIG_SPEED, "PICKAXE");
+                            }
                             event.setCancelled(true);
-                            enchantforTeam(team, Enchantment.DIG_SPEED, "PICKAXE");
+                            
 
                         }
                     }
