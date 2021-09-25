@@ -339,14 +339,23 @@ public class ShopHandler {
 
     private ItemStack checkforspecials(ShopEntry shopEntry) {
         String name = shopEntry.getValue().toString();
-        if (name.contains("SECRET")) {
-            if (name.contains("STICK")) {
-                int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[2]);
-                String currency = shopEntry.getValue().toString().split(",")[3];
-                return new ItemBuilder(Material.STICK, 1).setName(name.split(",")[1].replace("&", "§")).addEnchant(Enchantment.KNOCKBACK, 1).addLore(this.getPrice(price, currency)).build();
-            } else
-                return null;
+        if (name.contains("STICK")) {
+            int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[3]);
+            String currency = shopEntry.getValue().toString().split(",")[4];
+            return new ItemBuilder(Material.STICK, 1).setName(name.split(",")[1].replace("&", "§")).addEnchant(Enchantment.KNOCKBACK, 1).addLore(this.getPrice(price, currency)).build();
+
+        } else if (name.contains("Sharpness")) {
+            int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[3]);
+            String currency = shopEntry.getValue().toString().split(",")[4];
+            return new ItemBuilder(Material.ENCHANTED_BOOK, 1).setName(name.split(",")[1].replace("&", "§")).addLore(this.getPrice(price, currency)).addLore("Sharpness").build();
+
+        } else if (name.contains("Efficiency")) {
+            int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[3]);
+            String currency = shopEntry.getValue().toString().split(",")[4];
+            return new ItemBuilder(Material.ENCHANTED_BOOK, 1).setName(name.split(",")[1].replace("&", "§")).addLore(this.getPrice(price, currency)).addLore("Efficiency").build();
+
+        } else {
+            return null;
         }
-        return null;
     }
 }

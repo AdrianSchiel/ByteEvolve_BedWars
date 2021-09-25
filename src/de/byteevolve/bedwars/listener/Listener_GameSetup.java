@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +19,7 @@ public class Listener_GameSetup implements Listener {
 
     @EventHandler
     public void onInterract(PlayerInteractEvent event) {
-        if(event.getItem() != null && event.getItem().getItemMeta()!= null){
+        if (event.getItem() != null && event.getItem().getItemMeta() != null) {
             ItemStack item = event.getItem();
             if (item.getType().equals(Material.BLAZE_POWDER) && item.getItemMeta().getDisplayName().equalsIgnoreCase("§7« §aGame§2Setup §7»") && event.getPlayer().hasPermission("BedWars.GameSetup")) {
                 event.setCancelled(true);
@@ -33,7 +34,7 @@ public class Listener_GameSetup implements Listener {
     @EventHandler
     public void onGameMenu(InventoryClickEvent event) {
         if (event.getInventory().getTitle().equals("§7« §aGame§2Setup §7»")) {
-            Player player = (Player)event.getWhoClicked();
+            Player player = (Player) event.getWhoClicked();
             if (player.hasPermission("BedWars.GameSetup")) {
                 if (event.getCurrentItem().getItemMeta().getDisplayName().equals("§7« §aForce§2Map §7»")) {
                     (new PlayerHandler(player)).openForceMap();
@@ -46,5 +47,14 @@ public class Listener_GameSetup implements Listener {
             }
         }
 
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
+            if (BedWars.getInstance().getGameHandler().getGameState() == GameState.LOBBY || BedWars.getInstance().getGameHandler().getGameState() == GameState.ENDING) {
+                event.setCancelled(true);
+            }
+        }
     }
 }

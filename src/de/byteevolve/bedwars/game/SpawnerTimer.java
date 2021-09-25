@@ -8,6 +8,7 @@ import de.byteevolve.bedwars.location.LocationHandler;
 import de.byteevolve.bedwars.shop.config.ShopEntry;
 import de.byteevolve.bedwars.spawner.config.SpawnerEntry;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -19,7 +20,9 @@ public class SpawnerTimer {
         String arena = gameHandler.getArena().getName();
         startSpawner1(arena);
         startSpawner2(arena);
-        startSpawner3(arena);
+        if (BedWars.getInstance().getGameHandler().getGoldVotingResults().toString().contains("TRUE")) {
+            startSpawner3(arena);
+        }
     }
 
 
@@ -35,12 +38,12 @@ public class SpawnerTimer {
                     List<Loc> loc = locationHandler.getLocList(arena + "bronze");
                     for (Loc locs : loc) {
                         Material material = Material.valueOf(SpawnerEntry.CURRENCY1.getValue().toString().split(",")[0]);
-                        Bukkit.getWorld("world").dropItem(locs.getAsLocation(), new ItemBuilder(material, 1).setName("§8§l"+material.name()).build());
+                        Bukkit.getWorld("world").dropItem(locs.getAsLocation(), new ItemBuilder(material, 1).setName("§8§l" + material.name()).build());
                     }
-                }else
+                } else
                     this.cancel();
             }
-        }.runTaskTimer(BedWars.getInstance(), 0, Long.parseLong(SpawnerEntry.CURRENCY1.getValue().toString().split(",")[1]));
+        }.runTaskTimer(BedWars.getInstance(), 0, Long.parseLong(SpawnerEntry.CURRENCY1.getValue().toString().split(",")[1])*20);
     }
 
     private void startSpawner2(String arena) {
@@ -55,12 +58,12 @@ public class SpawnerTimer {
                     List<Loc> loc = locationHandler.getLocList(arena + "iron");
                     for (Loc locs : loc) {
                         Material material = Material.valueOf(SpawnerEntry.CURRENCY2.getValue().toString().split(",")[0]);
-                        Bukkit.getWorld("world").dropItem(locs.getAsLocation(), new ItemBuilder(material, 1).setName("§8§l"+material.name()).build());
+                        Bukkit.getWorld("world").dropItem(locs.getAsLocation(), new ItemBuilder(material, 1).setName("§8§l" + material.name()).build());
                     }
-                }else
+                } else
                     this.cancel();
             }
-        }.runTaskTimer(BedWars.getInstance(), 0, Long.parseLong(SpawnerEntry.CURRENCY2.getValue().toString().split(",")[1]));
+        }.runTaskTimer(BedWars.getInstance(), 0, Long.parseLong(SpawnerEntry.CURRENCY2.getValue().toString().split(",")[1])*20);
     }
 
     private void startSpawner3(String arena) {
@@ -75,11 +78,11 @@ public class SpawnerTimer {
                     List<Loc> loc = locationHandler.getLocList(arena + "gold");
                     for (Loc locs : loc) {
                         Material material = Material.valueOf(SpawnerEntry.CURRENCY3.getValue().toString().split(",")[0]);
-                        Bukkit.getWorld("world").dropItem(locs.getAsLocation(), new ItemBuilder(material, 1).setName("§8§l"+material.name()).build());
+                        Bukkit.getWorld("world").dropItem(locs.getAsLocation(), new ItemBuilder(material, 1).setName("§8§l" + material.name()).build());
                     }
-                }else
+                } else
                     this.cancel();
             }
-        }.runTaskTimer(BedWars.getInstance(), 0, Long.parseLong(SpawnerEntry.CURRENCY1.getValue().toString().split(",")[1]));
+        }.runTaskTimer(BedWars.getInstance(), 0, Long.parseLong(SpawnerEntry.CURRENCY3.getValue().toString().split(",")[1])*20);
     }
 }

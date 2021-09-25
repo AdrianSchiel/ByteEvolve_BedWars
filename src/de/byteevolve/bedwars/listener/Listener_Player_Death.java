@@ -6,14 +6,18 @@ import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.game.EndTime;
 import de.byteevolve.bedwars.game.GameHandler;
 import de.byteevolve.bedwars.game.Team;
+import de.byteevolve.bedwars.itembuilder.ItemBuilder;
+import de.byteevolve.bedwars.shop.config.ShopEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Bed;
 
 public class Listener_Player_Death implements Listener {
@@ -32,8 +36,6 @@ public class Listener_Player_Death implements Listener {
                 new EndTime(BedWars.getInstance().getGameHandler().getTeam(event.getEntity()).getTeam(), location);
             }
 
-        } else {
-            event.getEntity().spigot().respawn();
         }
     }
 
@@ -42,10 +44,24 @@ public class Listener_Player_Death implements Listener {
         if (BedWars.getInstance().getGameHandler().getTeam(event.getPlayer()) == null) {
             event.getPlayer().setGameMode(GameMode.SPECTATOR);
         } else {
-            Teams teams = BedWars.getInstance().getGameHandler().getTeam(event.getPlayer()).getTeam();
+            Team team = BedWars.getInstance().getGameHandler().getTeam(event.getPlayer());
+            Teams teams = team.getTeam();
+
             Location location = BedWars.getInstance().getLocationHandler().getLocByName(BedWars.getInstance().getGameHandler().getArena().getName() + "team" + teams.getId() + "spawn").getAsLocation();
             event.getPlayer().teleport(location);
-
+            if (team.getHasAxe().contains(event.getPlayer())) {
+                ItemStack itemStack = new ItemBuilder(Material.WOOD_AXE, 1).setName("§CWooden Axe").build();
+                event.getPlayer().getInventory().addItem(itemStack);
+            } else if (team.getHasPickaxe().contains(event.getPlayer())) {
+                ItemStack itemStack = new ItemBuilder(Material.WOOD_PICKAXE, 1).setName("§CWooden Pickaxe").build();
+                event.getPlayer().getInventory().addItem(itemStack);
+            } else if (team.getHasSword().contains(event.getPlayer())) {
+                ItemStack itemStack = new ItemBuilder(Material.WOOD_SWORD, 1).setName("§CWooden Sword").build();
+                event.getPlayer().getInventory().addItem(itemStack);
+            } else if (team.getHasShears().contains(event.getPlayer())) {
+                ItemStack itemStack = new ItemBuilder(Material.SHEARS, 1).setName("§cShears").build();
+                event.getPlayer().getInventory().addItem(itemStack);
+            }
         }
     }
 
@@ -54,6 +70,6 @@ public class Listener_Player_Death implements Listener {
             BedWars.getInstance().getGameHandler().setDone();
             return true;
         } else
-        return false;
+            return false;
     }
 }

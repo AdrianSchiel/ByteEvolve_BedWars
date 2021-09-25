@@ -161,7 +161,7 @@ public class GameHandler {
         }
     }
 
-    private VoteType getGoldVotingResults() {
+    public VoteType getGoldVotingResults() {
         int goldFor = 0;
         int goldAgainst = 0;
         Iterator var3 = this.getGoldVoting().keySet().iterator();
