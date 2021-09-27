@@ -6,6 +6,7 @@ import de.byteevolve.bedwars.arena.Arena;
 import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,8 +17,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import de.byteevolve.bedwars.location.Loc;
 import de.byteevolve.bedwars.location.LocationHandler;
 import de.byteevolve.bedwars.shop.npc.Npc;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Bed;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -34,6 +37,7 @@ public class GameHandler {
     private VoteType web;
     private BukkitTask gameTimer;
     private BukkitTask fastTimer;
+    private List<Location> blocks;
     private boolean isDone;
 
     public GameHandler() {
@@ -42,15 +46,43 @@ public class GameHandler {
         this.goldVoting = new HashMap();
         this.webVoting = new HashMap();
         this.isDone = false;
+        this.blocks = new ArrayList<>();
         if (!BedWars.getInstance().getArenaHandler().getArenas().isEmpty()) {
             this.arena = BedWars.getInstance().getArenaHandler().getArenas().get(0);
         }
         this.loadTeams();
         this.checkMapVote();
     }
-    public void setDone(){
+
+    public void loadWorld(){
+        try {
+            File sourceDirectory = new File(arena.getName());
+            File destinationDirectory = new File("world");
+            FileUtils.copyDirectory(sourceDirectory, destinationDirectory);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteOldMap() {
+        World world = Bukkit.getWorld("world");
+        Bukkit.unloadWorld(world, true);
+        File worldFolder = new File("world");
+        try {
+            FileUtils.deleteDirectory(worldFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Location> getBlocks() {
+        return blocks;
+    }
+
+    public void setDone() {
         isDone = true;
     }
+
     public void manageGameStart() {
         int players = Bukkit.getOnlinePlayers().size();
         int neededPlayers = ConfigEntries.PLAYERSPERTEAM.getAsInt() * ConfigEntries.TEAMS.getAsInt() / 2;
