@@ -19,6 +19,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Bed;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Listener_Player_Death implements Listener {
     @EventHandler
@@ -29,13 +30,28 @@ public class Listener_Player_Death implements Listener {
                 BedWars.getInstance().getGameHandler().getTeam(event.getEntity()).getMembers().remove(event.getEntity());
                 BedWars.getInstance().getGameHandler().getTeams().remove(team);
             }
+            if (event.getEntity().getKiller() != null && event.getEntity().getKiller() instanceof Player)
+                event.setDeathMessage(BedWars.getInstance().getPrefix() + "§8The player §a" + event.getEntity().getName() + " §8was killed by the player §a" + event.getEntity().getKiller().getName());
+            else
+                event.setDeathMessage(BedWars.getInstance().getPrefix() + "§8The player §a" + event.getEntity().getName() + " §8died!");
             event.getEntity().spigot().respawn();
             event.getEntity().setGameMode(GameMode.SPECTATOR);
             if (isOver()) {
                 Location location = BedWars.getInstance().getLocationHandler().getLocByName(BedWars.getInstance().getGameHandler().getArena().getName() + "lobby").getAsLocation();
-                new EndTime(BedWars.getInstance().getGameHandler().getTeam(event.getEntity()).getTeam(), location);
+                GameHandler gameHandler = BedWars.getInstance().getGameHandler();
+                for (Team team : gameHandler.getTeams()) {
+                    if (!team.getMembers().isEmpty()) {
+                        new EndTime(team.getTeam(), location);     System.out.println("TP");
+
+                    }
+                }
             }
 
+        } else {
+            if (event.getEntity().getKiller() != null && event.getEntity().getKiller() instanceof Player)
+                event.setDeathMessage(BedWars.getInstance().getPrefix() + "§8The player §a" + event.getEntity().getName() + " §8was killed by the player §a" + event.getEntity().getKiller().getName());
+            else
+                event.setDeathMessage(BedWars.getInstance().getPrefix() + "§8The player §a" + event.getEntity().getName() + " §8died!");
         }
     }
 
@@ -45,10 +61,7 @@ public class Listener_Player_Death implements Listener {
             event.getPlayer().setGameMode(GameMode.SPECTATOR);
         } else {
             Team team = BedWars.getInstance().getGameHandler().getTeam(event.getPlayer());
-            Teams teams = team.getTeam();
 
-            Location location = BedWars.getInstance().getLocationHandler().getLocByName(BedWars.getInstance().getGameHandler().getArena().getName() + "team" + teams.getId() + "spawn").getAsLocation();
-            event.getPlayer().teleport(location);
             if (team.getHasAxe().contains(event.getPlayer())) {
                 ItemStack itemStack = new ItemBuilder(Material.WOOD_AXE, 1).setName("§CWooden Axe").build();
                 event.getPlayer().getInventory().addItem(itemStack);
@@ -62,14 +75,30 @@ public class Listener_Player_Death implements Listener {
                 ItemStack itemStack = new ItemBuilder(Material.SHEARS, 1).setName("§cShears").build();
                 event.getPlayer().getInventory().addItem(itemStack);
             }
+            new BukkitRunnable() {
+                int i = 0;
+
+                @Override
+                public void run() {
+                    i++;
+                    if (i == 1) {
+                        Location location = BedWars.getInstance().getLocationHandler().getLocByName(BedWars.getInstance().getGameHandler().getArena().getSpawns().get(team.getTeam().getId())).getAsLocation();
+                        event.getPlayer().teleport(location);
+                        this.cancel();
+                    }
+                }
+            }.runTaskTimer(BedWars.getInstance(), 0, 20);
         }
     }
 
     private boolean isOver() {
         if (BedWars.getInstance().getGameHandler().getTeams().size() == 1) {
             BedWars.getInstance().getGameHandler().setDone();
+            System.out.println("DONE");
             return true;
-        } else
+        } else {
+            System.out.println(BedWars.getInstance().getGameHandler().getTeams().size());
             return false;
+        }
     }
 }
