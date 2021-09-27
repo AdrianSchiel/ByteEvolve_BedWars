@@ -38,24 +38,13 @@ public class PacketReader {
 
     public void readPacket(Packet<?> packet) {
         try {
-            if (packet instanceof PacketPlayInCustomPayload) {
-                PacketPlayInCustomPayload packetPlayInCustomPayload = (PacketPlayInCustomPayload) packet;
-                String s = packetPlayInCustomPayload.a();
-                if (s.equals("MC|BEdit") ||
-                        s.equals("MC|BSign")) {
-                    PacketPlayOutKickDisconnect packetPlayOutKickDisconnect =
-                            new PacketPlayOutKickDisconnect(
-                                    IChatBaseComponent.ChatSerializer.a("{text:§averboten!"));
-                    (((CraftPlayer) player).getHandle()).playerConnection.sendPacket((Packet) packetPlayOutKickDisconnect);
-                    channel.close();
-                }
-            }
             if (packet.getClass().getSimpleName().equalsIgnoreCase("PacketPlayInUseEntity")) {
                 int id = (Integer) getValue(packet, "a");
-                if (id >= 0 + 2000 && id <= 6 + 2000) {
+                if (id >= 0 + 2000 && id <= 10 + 2000) {
                     if (getValue(packet, "action").toString().equalsIgnoreCase("ATTACK")) {
                         new ShopHandler().openBlockTab(player);
                     } else if (getValue(packet, "action").toString().equalsIgnoreCase("INTERACT")) {
+                        new ShopHandler().openBlockTab(player);
                     }
                 }
             }
@@ -63,15 +52,6 @@ public class PacketReader {
                 Exception exception) {
         }
 
-    }
-
-    public void setValue(Object obj, String name, Object value) {
-        try {
-            Field field = obj.getClass().getDeclaredField(name);
-            field.setAccessible(true);
-            field.set(obj, value);
-        } catch (Exception e) {
-        }
     }
 
     public Object getValue(Object obj, String name) {
