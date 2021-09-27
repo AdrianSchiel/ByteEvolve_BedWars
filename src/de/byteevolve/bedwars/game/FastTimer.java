@@ -31,6 +31,7 @@ public class FastTimer extends BukkitRunnable {
 
         if (this.count == 10) {
             gameHandler.loadResults();
+          //  gameHandler.loadWorld();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.getInventory().setItem(0, new ItemStack(Material.AIR, 1));
                 player.getInventory().setItem(1, new ItemStack(Material.AIR, 1));
