@@ -20,6 +20,8 @@ import de.byteevolve.bedwars.shop.npc.Npc;
 import de.byteevolve.bedwars.spawner.config.SpawnerConfigHandler;
 import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -47,16 +49,16 @@ public class BedWars extends JavaPlugin {
     public void onEnable() {
         instance = this;
         this.configHandler = new ConfigHandler();
+        this.mySQL = new MySQL(ConfigEntries.MYSQL_HOST.getValue().toString(), ConfigEntries.MYSQL_USERNAME.getValue().toString(), ConfigEntries.MYSQL_PASSWORD.getValue().toString(), ConfigEntries.MYSQL_DATABASE.getValue().toString(), 3306);
+        this.spawnerConfigHandler = new SpawnerConfigHandler();
         this.prefix = ConfigEntries.PREFIX.getAsString();
         this.noPerm = this.prefix + ConfigEntries.NOPERM.getAsString();
         this.mustAPlayer = this.prefix + ConfigEntries.MUSTAPLAYER.getAsString();
         this.playerNotOnline = this.prefix + ConfigEntries.PLAYERNOTONLINE.getAsString();
         this.shopConfigHandler = new ShopConfigHandler();
-        this.mySQL = new MySQL("localhost", "root", "", "bedwars", 3306);
         this.locationHandler = new LocationHandler();
         this.arenaHandler = new ArenaHandler();
         this.gameHandler = new GameHandler();
-        this.spawnerConfigHandler = new SpawnerConfigHandler();
         this.teamNpc = new HashMap<>();
 
         getCommand("arena").setExecutor(new Command_Arena());
@@ -73,6 +75,7 @@ public class BedWars extends JavaPlugin {
         pluginManager.registerEvents(new Listener_Bed_Break(), this);
         pluginManager.registerEvents(new Listener_Player_Death(), this);
         pluginManager.registerEvents(new Listener_Shop_Enchant(), this);
+        pluginManager.registerEvents(new Listener_Map_Protection(), this);
         loadVersions();
 
     }
@@ -137,6 +140,14 @@ public class BedWars extends JavaPlugin {
         return gameHandler;
     }
 
+    @Override
+    public void onDisable() {
+        for (Location location : gameHandler.getBlocks()) {
+            location.getBlock().setType(Material.AIR);
+        }
+        super.onDisable();
+    }
+
     public String getPrefix() {
         return prefix;
     }
@@ -184,4 +195,5 @@ public class BedWars extends JavaPlugin {
     public MySQL getMySQL() {
         return mySQL;
     }
+
 }
