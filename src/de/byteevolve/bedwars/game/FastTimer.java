@@ -3,15 +3,11 @@ package de.byteevolve.bedwars.game;
 
 import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
-
-import java.util.Iterator;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Bed;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class FastTimer extends BukkitRunnable {
@@ -56,6 +52,7 @@ public class FastTimer extends BukkitRunnable {
             new SpawnerTimer();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.getInventory().clear();
+                BedWars.getInstance().getScoreboard().sendScoreboard(player);
                 player.setGameMode(GameMode.SURVIVAL);
                 player.getInventory().setArmorContents(null);
                 BedWars.getInstance().getGameHandler().setGameState(GameState.INGAME);

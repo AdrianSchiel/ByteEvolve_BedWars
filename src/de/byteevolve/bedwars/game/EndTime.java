@@ -2,6 +2,8 @@ package de.byteevolve.bedwars.game;
 
 import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Teams;
+import de.byteevolve.bedwars.player.stats.PlayerStats;
+import de.byteevolve.bedwars.player.stats.PlayerStatsType;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -21,6 +23,7 @@ public class EndTime {
     public void start() {
         new BukkitRunnable() {
             int i = 0;
+
             @Override
             public void run() {
                 i++;
@@ -29,8 +32,18 @@ public class EndTime {
                         player.teleport(location);
                         player.setGameMode(GameMode.ADVENTURE);
                         player.getInventory().clear();
+                        GameHandler gameHandler = BedWars.getInstance().getGameHandler();
+                        gameHandler.setGameState(GameState.ENDING);
+                        player.sendTitle("§8The team " + team.getColor() + team.name() + " §8 has won the game!", "GG to all the participants");
+                        player.sendMessage("<>---------------<>");
+                        player.sendMessage("§8Kills: §a" + (gameHandler.getKills().containsKey(player) ? gameHandler.getKills().get(player) : 0));
+                        player.sendMessage("§8Beds destroyed: §a" + (gameHandler.getBeds().containsKey(player) ? gameHandler.getBeds().get(player) : 0));
+                        player.sendMessage("<>---------------<>");
+                        PlayerStats playerStats = new PlayerStats(player.getUniqueId().toString());
+                        playerStats.add(PlayerStatsType.KILLS, (gameHandler.getKills().containsKey(player) ? gameHandler.getKills().get(player) : 0));
+                        playerStats.add(PlayerStatsType.BEDS, (gameHandler.getBeds().containsKey(player) ? gameHandler.getBeds().get(player) : 0));
+                        BedWars.getInstance().getScoreboard().sendScoreboard(player);
                     }
-                    Bukkit.getServer().broadcastMessage(BedWars.getInstance().getPrefix() + "§8The team " + team.getColor() + team.name() + " §8 has won the game! GG to all the participants");
 
                 }
                 if (i == 20) {
