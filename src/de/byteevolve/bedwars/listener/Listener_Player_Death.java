@@ -1,14 +1,12 @@
 package de.byteevolve.bedwars.listener;
 
-import com.mojang.authlib.BaseUserAuthentication;
 import de.byteevolve.bedwars.BedWars;
-import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.game.EndTime;
 import de.byteevolve.bedwars.game.GameHandler;
 import de.byteevolve.bedwars.game.Team;
 import de.byteevolve.bedwars.itembuilder.ItemBuilder;
-import de.byteevolve.bedwars.shop.config.ShopEntry;
-import org.bukkit.Bukkit;
+import de.byteevolve.bedwars.player.stats.PlayerStats;
+import de.byteevolve.bedwars.player.stats.PlayerStatsType;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Bed;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Listener_Player_Death implements Listener {
@@ -30,6 +27,10 @@ public class Listener_Player_Death implements Listener {
                 BedWars.getInstance().getGameHandler().getTeam(event.getEntity()).getMembers().remove(event.getEntity());
                 BedWars.getInstance().getGameHandler().getTeams().remove(team);
             }
+            if (BedWars.getInstance().getGameHandler().getKills().get(event.getEntity()) == null)
+                BedWars.getInstance().getGameHandler().getKills().put(event.getEntity().getKiller(), 1);
+            else
+                BedWars.getInstance().getGameHandler().getKills().put(event.getEntity().getKiller(), BedWars.getInstance().getGameHandler().getKills().get(event.getEntity().getKiller()) + 1);
             if (event.getEntity().getKiller() != null && event.getEntity().getKiller() instanceof Player)
                 event.setDeathMessage(BedWars.getInstance().getPrefix() + "§8The player §a" + event.getEntity().getName() + " §8was killed by the player §a" + event.getEntity().getKiller().getName());
             else
@@ -41,7 +42,8 @@ public class Listener_Player_Death implements Listener {
                 GameHandler gameHandler = BedWars.getInstance().getGameHandler();
                 for (Team team : gameHandler.getTeams()) {
                     if (!team.getMembers().isEmpty()) {
-                        new EndTime(team.getTeam(), location);     System.out.println("TP");
+                        new EndTime(team.getTeam(), location);
+                        System.out.println("TP");
 
                     }
                 }
@@ -59,6 +61,7 @@ public class Listener_Player_Death implements Listener {
     public void onRespawn(PlayerRespawnEvent event) {
         if (BedWars.getInstance().getGameHandler().getTeam(event.getPlayer()) == null) {
             event.getPlayer().setGameMode(GameMode.SPECTATOR);
+            new PlayerStats(event.getPlayer().getUniqueId().toString()).add(PlayerStatsType.DEATHS, 1);
         } else {
             Team team = BedWars.getInstance().getGameHandler().getTeam(event.getPlayer());
 
