@@ -3,21 +3,15 @@ package de.byteevolve.bedwars.listener;
 
 import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Arena;
-import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 import de.byteevolve.bedwars.game.GameHandler;
 import de.byteevolve.bedwars.game.Team;
 import de.byteevolve.bedwars.location.Loc;
 import de.byteevolve.bedwars.location.LocationHandler;
 import de.byteevolve.bedwars.player.PlayerHandler;
-
-import java.util.Iterator;
-
-import de.byteevolve.bedwars.shop.npc.Npc;
 import de.byteevolve.bedwars.shop.npc.PacketReader;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,6 +33,7 @@ public class Listener_Join implements Listener {
             GameHandler gameHandler = BedWars.getInstance().getGameHandler();
             Arena arena = BedWars.getInstance().getGameHandler().getArena();
             String arenaname = gameHandler.getArena().getName();
+            BedWars.getInstance().getScoreboard().sendScoreboard(player);
             switch (gameHandler.getGameState()) {
                 case LOBBY:
                     player.setGameMode(GameMode.ADVENTURE);

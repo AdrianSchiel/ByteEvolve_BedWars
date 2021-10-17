@@ -3,15 +3,13 @@ package de.byteevolve.bedwars.listener;
 import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.game.Team;
-import de.byteevolve.bedwars.location.Loc;
-import de.byteevolve.bedwars.location.LocationHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.material.Bed;
 
 public class Listener_Bed_Break implements Listener {
     @EventHandler
@@ -30,6 +28,16 @@ public class Listener_Bed_Break implements Listener {
                             Bukkit.getServer().broadcastMessage(BedWars.getInstance().getPrefix() + "§8The bed from team " + teams.getColor() + teams.name() + " §8was destroyed!");
                             team.setBed(false);
                             event.getBlock().getDrops().clear();
+
+                            if (BedWars.getInstance().getGameHandler().getBeds().get(event.getPlayer()) == null)
+                                BedWars.getInstance().getGameHandler().getBeds().put(event.getPlayer(), 1);
+                            else
+                                BedWars.getInstance().getGameHandler().getBeds().put(event.getPlayer(), BedWars.getInstance().getGameHandler().getBeds().get(event.getPlayer()) + 1);
+
+                            for (Player player : Bukkit.getOnlinePlayers()) {
+                                BedWars.getInstance().getScoreboard().sendScoreboard(player);
+                                player.sendTitle("§8The bed from team " + teams.getColor() + teams.name() + " §8 has been broken!", "They cant respawn now");
+                            }
                         } else {
                             event.getPlayer().sendMessage(BedWars.getInstance().getPrefix() + "§8You cant destroy your own bed!");
                             event.setCancelled(true);
@@ -37,7 +45,7 @@ public class Listener_Bed_Break implements Listener {
                     } else
                         System.out.println("BED DOWN");
                 } else System.out.println("NOT BED");
-                System.out.println(loc.toString() +"!= "+ event.getBlock().getLocation().toString());
+                System.out.println(loc.toString() + "!= " + event.getBlock().getLocation().toString());
 
             }
         }
