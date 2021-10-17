@@ -131,7 +131,6 @@ public class GameHandler {
     public void loadResults() {
         Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8GOLD: §a" + getGoldVotingResults().toString());
         Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8WEB: §a" + getWebVotingResults().toString());
-        System.out.println(getMapVoteResult());
         Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8ARENA: §a" + getMapVoteResult().getDisplayname());
     }
 
@@ -150,7 +149,6 @@ public class GameHandler {
             Arena most = null;
             int arenavotes = -1;
             for (Arena arena : mapVote.getVotes().keySet()) {
-                System.out.println(arena.getName());
                 if (mapVote.getVotes().get(arena) > arenavotes) {
                     arenavotes = mapVote.getVotes().get(arena);
                     most = arena;

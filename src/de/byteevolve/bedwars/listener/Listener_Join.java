@@ -38,6 +38,7 @@ public class Listener_Join implements Listener {
                 case LOBBY:
                     player.setGameMode(GameMode.ADVENTURE);
                     PlayerHandler playerHandler = new PlayerHandler(player);
+                    player.getInventory().clear();
                     playerHandler.setJoinEquip();
                     event.getPlayer().teleport(BedWars.getInstance().getLocationHandler().getLocByName(arena.getName() + "lobby").getAsLocation());
                     BedWars.getInstance().getGameHandler().manageGameStart();

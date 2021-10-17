@@ -34,7 +34,7 @@ public class EndTime {
                         player.getInventory().clear();
                         GameHandler gameHandler = BedWars.getInstance().getGameHandler();
                         gameHandler.setGameState(GameState.ENDING);
-                        player.sendTitle("§8The team " + team.getColor() + team.name() + " §8 has won the game!", "GG to all the participants");
+                        player.sendTitle("§8The team " + team.getColor() + team.name() + " §8 has won the game!", "§8GG to all the participants");
                         player.sendMessage("<>---------------<>");
                         player.sendMessage("§8Kills: §a" + (gameHandler.getKills().containsKey(player) ? gameHandler.getKills().get(player) : 0));
                         player.sendMessage("§8Beds destroyed: §a" + (gameHandler.getBeds().containsKey(player) ? gameHandler.getBeds().get(player) : 0));

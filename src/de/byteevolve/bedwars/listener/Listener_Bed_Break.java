@@ -36,16 +36,14 @@ public class Listener_Bed_Break implements Listener {
 
                             for (Player player : Bukkit.getOnlinePlayers()) {
                                 BedWars.getInstance().getScoreboard().sendScoreboard(player);
-                                player.sendTitle("§8The bed from team " + teams.getColor() + teams.name() + " §8 has been broken!", "They cant respawn now");
+                                player.sendTitle("§8The bed from team " + teams.getColor() + teams.name() + " §8 has been broken!", "§8They cant respawn now");
                             }
                         } else {
                             event.getPlayer().sendMessage(BedWars.getInstance().getPrefix() + "§8You cant destroy your own bed!");
                             event.setCancelled(true);
                         }
-                    } else
-                        System.out.println("BED DOWN");
-                } else System.out.println("NOT BED");
-                System.out.println(loc.toString() + "!= " + event.getBlock().getLocation().toString());
+                    }
+                }
 
             }
         }
