@@ -5,6 +5,7 @@ import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Arena;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
 import de.byteevolve.bedwars.game.GameHandler;
+import de.byteevolve.bedwars.game.GameState;
 import de.byteevolve.bedwars.game.Team;
 import de.byteevolve.bedwars.location.Loc;
 import de.byteevolve.bedwars.location.LocationHandler;
@@ -34,40 +35,42 @@ public class Listener_Join implements Listener {
             Arena arena = BedWars.getInstance().getGameHandler().getArena();
             String arenaname = gameHandler.getArena().getName();
             BedWars.getInstance().getScoreboard().sendScoreboard(player);
-            switch (gameHandler.getGameState()) {
-                case LOBBY:
-                    player.setGameMode(GameMode.ADVENTURE);
-                    PlayerHandler playerHandler = new PlayerHandler(player);
-                    player.getInventory().clear();
-                    playerHandler.setJoinEquip();
-                    event.getPlayer().teleport(BedWars.getInstance().getLocationHandler().getLocByName(arena.getName() + "lobby").getAsLocation());
-                    BedWars.getInstance().getGameHandler().manageGameStart();
-                    event.setJoinMessage(prefix + "§8Der Spieler §a" + player.getName() + "§8 hat das Spiel §abetreten");
-                    break;
-                case INGAME:
-                    if (gameHandler.hasPlayed(player)) {
-                        player.setGameMode(GameMode.SURVIVAL);
-                        Team team = gameHandler.getTeam(player);
-                        event.setJoinMessage(prefix + "§8Der Spieler " + team.getTeam().getColor() + player.getName() + " §8ist dem Spiel wieder  §abeigetreten");
-                        LocationHandler locationHandler = BedWars.getInstance().getLocationHandler();
-                        Loc loc = locationHandler.getLocByName(arenaname + "team" + team.getTeam().getId() + "spawn");
-                        player.teleport(loc.getAsLocation());
-                    } else {
-
-                        for (Player player1 : Bukkit.getOnlinePlayers()) {
-                            if (player.getGameMode().equals(GameMode.SURVIVAL)) {
-                                player.hidePlayer(player1);
-                            }
+            if (BedWars.getInstance().getGameHandler().getGameState() == GameState.LOBBY) {
+                player.setGameMode(GameMode.ADVENTURE);
+                PlayerHandler playerHandler = new PlayerHandler(player);
+                player.getInventory().setArmorContents(null);
+                playerHandler.setJoinEquip();
+                event.getPlayer().teleport(BedWars.getInstance().getLocationHandler().getLocByName(arena.getName() + "lobby").getAsLocation());
+                BedWars.getInstance().getGameHandler().manageGameStart();
+                event.setJoinMessage(prefix + "§8Der Spieler §a" + player.getName() + "§8 hat das Spiel §abetreten");
+            } else if (BedWars.getInstance().getGameHandler().getGameState() == GameState.INGAME) {
+                if (gameHandler.hasPlayed(player)) {
+                    player.setGameMode(GameMode.SURVIVAL);
+                    Team team = gameHandler.getTeam(player);
+                    event.setJoinMessage(prefix + "§8Der Spieler " + team.getTeam().getColor() + player.getName() + " §8ist dem Spiel wieder  §abeigetreten");
+                    LocationHandler locationHandler = BedWars.getInstance().getLocationHandler();
+                    Loc loc = locationHandler.getLocByName(arenaname + "team" + team.getTeam().getId() + "spawn");
+                    player.teleport(loc.getAsLocation());
+                } else {
+                    for (Player player1 : Bukkit.getOnlinePlayers()) {
+                        if (player.getGameMode().equals(GameMode.SURVIVAL)) {
+                            player.hidePlayer(player1);
                         }
-
-                        player.setGameMode(GameMode.SPECTATOR);
                     }
-                    break;
-                default:
-                    event.setJoinMessage(null);
-                    break;
-            }
 
+                    player.setGameMode(GameMode.SPECTATOR);
+                }
+            } else if (BedWars.getInstance().getGameHandler().getGameState() == GameState.ENDING) {
+                player.setGameMode(GameMode.ADVENTURE);
+                PlayerHandler playerHandler = new PlayerHandler(player);
+                player.getInventory().setArmorContents(null);
+                playerHandler.setJoinEquip();
+                event.getPlayer().teleport(BedWars.getInstance().getLocationHandler().getLocByName(arena.getName() + "lobby").getAsLocation());
+                BedWars.getInstance().getGameHandler().manageGameStart();
+                event.setJoinMessage(prefix + "§8Der Spieler §a" + player.getName() + "§8 hat das Spiel §abetreten");
+            } else
+                event.setJoinMessage(null);
         }
+
     }
 }

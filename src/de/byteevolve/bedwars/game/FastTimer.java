@@ -27,7 +27,7 @@ public class FastTimer extends BukkitRunnable {
 
         if (this.count == 10) {
             gameHandler.loadResults();
-          //  gameHandler.loadWorld();
+            //  gameHandler.loadWorld();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.getInventory().setItem(0, new ItemStack(Material.AIR, 1));
                 player.getInventory().setItem(1, new ItemStack(Material.AIR, 1));
@@ -52,10 +52,10 @@ public class FastTimer extends BukkitRunnable {
             new SpawnerTimer();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.getInventory().clear();
-                BedWars.getInstance().getScoreboard().sendScoreboard(player);
                 player.setGameMode(GameMode.SURVIVAL);
                 player.getInventory().setArmorContents(null);
                 BedWars.getInstance().getGameHandler().setGameState(GameState.INGAME);
+                BedWars.getInstance().getScoreboard().sendScoreboard(player);
                 this.cancel();
             }
         }

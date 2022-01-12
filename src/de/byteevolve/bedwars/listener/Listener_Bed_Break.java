@@ -24,11 +24,13 @@ public class Listener_Bed_Break implements Listener {
                     Teams teams = Teams.fromID(id);
                     Team team = BedWars.getInstance().getGameHandler().getTeams().get(id);
                     if (team.isBed() == true) {
-                        if (!team.getMembers().contains(event.getPlayer())) {
-                            Bukkit.getServer().broadcastMessage(BedWars.getInstance().getPrefix() + "§8The bed from team " + teams.getColor() + teams.name() + " §8was destroyed!");
-                            team.setBed(false);
-                            event.getBlock().getDrops().clear();
+                        if (teams.getColor() != BedWars.getInstance().getGameHandler().getTeam(event.getPlayer()).getTeam().getColor()) {
+                            Location bed1 = event.getBlock().getLocation();
+                            bed1.getWorld().getBlockAt(bed1).setType(Material.AIR);
 
+
+                            // Bukkit.getServer().broadcastMessage(BedWars.getInstance().getPrefix() + "§8The bed from team " + teams.getColor() + teams.name() + " §8was destroyed!");
+                            team.setBed(false);
                             if (BedWars.getInstance().getGameHandler().getBeds().get(event.getPlayer()) == null)
                                 BedWars.getInstance().getGameHandler().getBeds().put(event.getPlayer(), 1);
                             else
@@ -48,4 +50,5 @@ public class Listener_Bed_Break implements Listener {
             }
         }
     }
+
 }

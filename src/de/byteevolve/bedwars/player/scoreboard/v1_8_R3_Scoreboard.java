@@ -46,7 +46,7 @@ public class v1_8_R3_Scoreboard implements BWScoreboard {
             ScoreboardScore scores = new ScoreboardScore(sb, obj, "§0§8§l§M-------------------");
             ScoreboardScore scores2 = new ScoreboardScore(sb, obj, "§1§8§l§M-------------------");
             scores.setScore(0);
-            scores2.setScore(i+1);
+            scores2.setScore(i + 1);
             PacketPlayOutScoreboardScore packet2 = new PacketPlayOutScoreboardScore(scores);
             sendPacket(packet2, player);
             PacketPlayOutScoreboardScore packet3 = new PacketPlayOutScoreboardScore(scores2);

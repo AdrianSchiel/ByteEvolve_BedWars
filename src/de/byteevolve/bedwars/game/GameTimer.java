@@ -49,10 +49,10 @@ public class GameTimer extends BukkitRunnable {
             new SpawnerTimer();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.getInventory().clear();
-                BedWars.getInstance().getScoreboard().sendScoreboard(player);
                 player.setGameMode(GameMode.SURVIVAL);
                 player.getInventory().setArmorContents(null);
                 BedWars.getInstance().getGameHandler().setGameState(GameState.INGAME);
+                BedWars.getInstance().getScoreboard().sendScoreboard(player);
                 this.cancel();
             }
         }

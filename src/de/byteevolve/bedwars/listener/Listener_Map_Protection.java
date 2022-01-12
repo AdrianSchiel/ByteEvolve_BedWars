@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.Iterator;
@@ -27,9 +28,8 @@ public class Listener_Map_Protection implements Listener {
     @EventHandler
     public void onBlockBreak(EntityExplodeEvent event) {
         Iterator<Block> iter = event.blockList().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             if (BedWars.getInstance().getGameHandler().getBlocks().contains(iter.next().getLocation())) {
-                BedWars.getInstance().getGameHandler().getBlocks().remove(iter.next().getLocation());
             } else {
                 iter.remove();
             }
@@ -37,6 +37,12 @@ public class Listener_Map_Protection implements Listener {
 
 
     }
+
+    @EventHandler
+    public void FoodLevel(FoodLevelChangeEvent event) {
+        event.setCancelled(true);
+    }
+
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         BedWars.getInstance().getGameHandler().getBlocks().add(event.getBlock().getLocation());

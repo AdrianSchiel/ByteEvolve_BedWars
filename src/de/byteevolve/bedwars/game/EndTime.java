@@ -32,6 +32,7 @@ public class EndTime {
                         player.teleport(location);
                         player.setGameMode(GameMode.ADVENTURE);
                         player.getInventory().clear();
+                        player.getInventory().setArmorContents(null);
                         GameHandler gameHandler = BedWars.getInstance().getGameHandler();
                         gameHandler.setGameState(GameState.ENDING);
                         player.sendTitle("§8The team " + team.getColor() + team.name() + " §8 has won the game!", "§8GG to all the participants");

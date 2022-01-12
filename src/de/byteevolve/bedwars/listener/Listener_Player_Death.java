@@ -35,6 +35,7 @@ public class Listener_Player_Death implements Listener {
                 event.setDeathMessage(BedWars.getInstance().getPrefix() + "§8The player §a" + event.getEntity().getName() + " §8was killed by the player §a" + event.getEntity().getKiller().getName());
             else
                 event.setDeathMessage(BedWars.getInstance().getPrefix() + "§8The player §a" + event.getEntity().getName() + " §8died!");
+            event.getDrops().clear();
             event.getEntity().spigot().respawn();
             event.getEntity().setGameMode(GameMode.SPECTATOR);
             if (isOver()) {
@@ -43,13 +44,13 @@ public class Listener_Player_Death implements Listener {
                 for (Team team : gameHandler.getTeams()) {
                     if (!team.getMembers().isEmpty()) {
                         new EndTime(team.getTeam(), location);
-                        System.out.println("TP");
 
                     }
                 }
             }
 
         } else {
+            event.getDrops().clear();
             if (event.getEntity().getKiller() != null && event.getEntity().getKiller() instanceof Player)
                 event.setDeathMessage(BedWars.getInstance().getPrefix() + "§8The player §a" + event.getEntity().getName() + " §8was killed by the player §a" + event.getEntity().getKiller().getName());
             else
@@ -78,6 +79,7 @@ public class Listener_Player_Death implements Listener {
                 ItemStack itemStack = new ItemBuilder(Material.SHEARS, 1).setName("§cShears").build();
                 event.getPlayer().getInventory().addItem(itemStack);
             }
+            BedWars.getInstance().getGameHandler().spawnNpcs();
             new BukkitRunnable() {
                 int i = 0;
 

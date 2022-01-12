@@ -53,11 +53,11 @@ public class Listener_Voting implements Listener {
             BedWars bedWars = BedWars.getInstance();
             if (event.getCurrentItem().getItemMeta().getDisplayName().equals("§aFür Gold Stimmen")) {
                 bedWars.getGameHandler().getGoldVoting().put(player, VoteType.FOR);
-                player.sendMessage("Du hast für Gold gestimmt");
+                player.sendMessage(BedWars.getInstance().getPrefix() + " §8Du hast für Gold gestimmt!");
                 player.closeInventory();
             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals("§cGegen Gold Stimmen")) {
                 bedWars.getGameHandler().getGoldVoting().put(player, VoteType.AGAINST);
-                player.sendMessage("Du hast gegen Gold gestimmt");
+                player.sendMessage(BedWars.getInstance().getPrefix() + " §8Du hast gegen Gold gestimmt!");
                 player.closeInventory();
             }
         }
@@ -71,11 +71,11 @@ public class Listener_Voting implements Listener {
             BedWars bedWars = BedWars.getInstance();
             if (event.getCurrentItem().getItemMeta().getDisplayName().equals("§aFür Webs Stimmen")) {
                 bedWars.getGameHandler().getWebVoting().put(player, VoteType.FOR);
-                player.sendMessage("Du hast für Webs gestimmt");
+                player.sendMessage(BedWars.getInstance().getPrefix() + " §8Du hast für Webs gestimmt!");
                 player.closeInventory();
             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals("§cGegen Webs Stimmen")) {
                 bedWars.getGameHandler().getWebVoting().put(player, VoteType.AGAINST);
-                player.sendMessage("Du hast gegen Webs gestimmt test");
+                player.sendMessage(BedWars.getInstance().getPrefix() + " §8Du hast gegen Webs gestimmt!");
                 player.closeInventory();
             }
         }
