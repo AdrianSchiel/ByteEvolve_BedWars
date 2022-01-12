@@ -1,6 +1,7 @@
 package de.byteevolve.bedwars.itembuilder;
 
 import de.byteevolve.bedwars.BedWars;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -31,7 +32,7 @@ public class LeatherBuilder {
     public ItemStack build() {
         ItemStack itemStack = new ItemStack(this.material, this.count);
 
-        if(this.unbreakable) {
+        if (this.unbreakable) {
             itemStack = BedWars.getInstance().getUnbreakable().makeUnbreakable(itemStack);
         }
 
@@ -39,8 +40,8 @@ public class LeatherBuilder {
         leatherArmorMeta.setColor(this.color);
         leatherArmorMeta.setDisplayName(this.name);
         leatherArmorMeta.setLore(this.lore);
-        if(enchantment != null){
-            leatherArmorMeta.addEnchant(enchantment,level,true);
+        if (enchantment != null) {
+            leatherArmorMeta.addEnchant(enchantment, level, true);
         }
         itemStack.setItemMeta((ItemMeta) leatherArmorMeta);
         return itemStack;
@@ -71,6 +72,18 @@ public class LeatherBuilder {
 
     public LeatherBuilder setColor(Color color) {
         this.color = color;
+        return this;
+    }
+
+    public LeatherBuilder setColorbyString(String s) {
+        if (s.contains("§c")) this.color = Color.RED;
+        else if (s.contains("§9")) this.color = Color.BLUE;
+        else if (s.contains("§a")) this.color = Color.GREEN;
+        else if (s.contains("§e")) this.color = Color.YELLOW;
+        else if (s.contains("§b")) this.color = Color.AQUA;
+        else if (s.contains("§f")) this.color = Color.WHITE;
+        else if (s.contains("§d")) this.color = Color.FUCHSIA;
+        else if (s.contains("§7")) this.color = Color.GRAY;
         return this;
     }
 

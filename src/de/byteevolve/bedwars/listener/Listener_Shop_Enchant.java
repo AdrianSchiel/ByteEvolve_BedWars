@@ -19,36 +19,34 @@ public class Listener_Shop_Enchant implements Listener {
     public void onCLick(InventoryClickEvent event) {
         if (event.getInventory() != null) {
             if (event.getCurrentItem() != null) {
-                if (event.getCurrentItem().hasItemMeta()) {
-                    if (event.getCurrentItem().getItemMeta().hasLore()) {
-                        Player player = (Player) event.getWhoClicked();
-                        Team team = BedWars.getInstance().getGameHandler().getTeam(player);
-                        int price = Integer.parseInt(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(0).split(" ")[0]));
-                        Material material = Material.valueOf(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(0).split(" ")[1]));
-                        ItemStack currency = new ItemBuilder(material, 1).setName("§8§l" + material.name()).build();
+                if(event.getClickedInventory().getName().equalsIgnoreCase("§aShop")) {
+                    if (event.getCurrentItem().hasItemMeta()) {
+                        if (event.getCurrentItem().getItemMeta().hasLore()) {
+                            Player player = (Player) event.getWhoClicked();
+                            Team team = BedWars.getInstance().getGameHandler().getTeam(player);
+                            int price = Integer.parseInt(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(0).split(" ")[0]));
+                            Material material = Material.valueOf(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(0).split(" ")[1]));
+                            ItemStack currency = new ItemBuilder(material, 1).setName("§8§l" + material.name()).build();
 
-
-                        if (event.getWhoClicked().getInventory().containsAtLeast(currency, price)) {
-                            if (event.getCurrentItem().getItemMeta().getLore().contains("Sharpness")) {
-                                if (team.getSharpness() == 5) {
-                                    player.sendMessage(BedWars.getInstance().getPrefix() + "§8You are at the maximum sharpness level");
-                                } else{
-                                    team.setSharpness(team.getSharpness() + 1);
+                            if (event.getWhoClicked().getInventory().containsAtLeast(currency, price)) {
+                                if (event.getCurrentItem().getItemMeta().getLore().contains("Sharpness")) {
+                                    if (team.getSharpness() == 5) {
+                                        player.sendMessage(BedWars.getInstance().getPrefix() + "§8You are at the maximum sharpness level");
+                                    } else
+                                        team.setSharpness(team.getSharpness() + 1);
+                                    event.setCancelled(true);
                                     enchantforTeam(team, Enchantment.DAMAGE_ALL, "SWORD");
-                            }
-                                event.setCancelled(true);
-                                
-                            }
-                        } else if (event.getCurrentItem().getItemMeta().getLore().contains("Efficiency")) {
-                            if (team.getEfficiency() == 5) {
-                                player.sendMessage(BedWars.getInstance().getPrefix() + "§8You are at the maximum efficiency level");
-                            } else{
-                                team.setEfficiency(team.getEfficiency() + 1);
-                                enchantforTeam(team, Enchantment.DIG_SPEED, "PICKAXE");
-                            }
-                            event.setCancelled(true);
-                            
+                                } else if (event.getCurrentItem().getItemMeta().getLore().contains("Efficiency")) {
+                                    if (team.getEfficiency() == 5) {
+                                        player.sendMessage(BedWars.getInstance().getPrefix() + "§8You are at the maximum efficiency level");
+                                    } else
+                                        team.setEfficiency(team.getEfficiency() + 1);
+                                    event.setCancelled(true);
+                                    enchantforTeam(team, Enchantment.DIG_SPEED, "PICKAXE");
+                                    enchantforTeam(team, Enchantment.DIG_SPEED, "AXE");
 
+                                }
+                            }
                         }
                     }
                 }
@@ -61,14 +59,19 @@ public class Listener_Shop_Enchant implements Listener {
         for (Player player1 : team.getMembers()) {
             for (ItemStack itemStack : player1.getInventory().getContents()) {
                 if (itemStack != null) {
-                    if (itemStack.getType() == Material.valueOf("WOOD_" + type) || itemStack.getType() == Material.valueOf("STONE_" + type) || itemStack.getType() == Material.valueOf("GOLDEN_" + type) ||
+                    if (itemStack.getType() == Material.valueOf("WOOD_" + type) || itemStack.getType() == Material.valueOf("STONE_" + type) || itemStack.getType() == Material.valueOf("GOLD_" + type) ||
                             itemStack.getType() == Material.valueOf("IRON_" + type) || itemStack.getType() == Material.valueOf("DIAMOND_" + type)) {
                         ItemMeta itemMeta = itemStack.getItemMeta();
                         if (itemMeta.hasEnchant(enchantment)) {
                             itemMeta.removeEnchant(enchantment);
-                            itemMeta.addEnchant(enchantment, team.getEfficiency(), true);
-                        } else
-                            itemMeta.addEnchant(enchantment, team.getEfficiency(), true);
+                           if(enchantment.equals(Enchantment.DAMAGE_ALL))  itemMeta.addEnchant(enchantment, team.getSharpness(), true);
+                           else if(enchantment.equals(Enchantment.DIG_SPEED))  itemMeta.addEnchant(enchantment, team.getEfficiency(), true);
+                        } else {
+                            if (enchantment.equals(Enchantment.DAMAGE_ALL))
+                                itemMeta.addEnchant(enchantment, team.getSharpness(), true);
+                            else if (enchantment.equals(Enchantment.DIG_SPEED))
+                                itemMeta.addEnchant(enchantment, team.getEfficiency(), true);
+                        }
                         itemStack.setItemMeta(itemMeta);
                     }
 

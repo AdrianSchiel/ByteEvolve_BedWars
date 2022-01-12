@@ -5,23 +5,23 @@ import de.byteevolve.bedwars.BedWars;
 import de.byteevolve.bedwars.arena.Arena;
 import de.byteevolve.bedwars.arena.Teams;
 import de.byteevolve.bedwars.configuration.config.ConfigEntries;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-
 import de.byteevolve.bedwars.location.Loc;
 import de.byteevolve.bedwars.location.LocationHandler;
+import de.byteevolve.bedwars.player.stats.PlayerStats;
+import de.byteevolve.bedwars.player.stats.PlayerStatsType;
 import de.byteevolve.bedwars.shop.npc.Npc;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Bed;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameHandler {
     private GameState gameState;
@@ -34,6 +34,9 @@ public class GameHandler {
     private VoteType web;
     private BukkitTask gameTimer;
     private BukkitTask fastTimer;
+    private List<Location> blocks;
+    private Map<Player, Integer> kills;
+    private Map<Player, Integer> beds;
     private boolean isDone;
 
     public GameHandler() {
@@ -41,16 +44,46 @@ public class GameHandler {
         this.teams = new ArrayList();
         this.goldVoting = new HashMap();
         this.webVoting = new HashMap();
+        this.kills = new HashMap();
+        this.beds = new HashMap();
         this.isDone = false;
+        this.blocks = new ArrayList<>();
         if (!BedWars.getInstance().getArenaHandler().getArenas().isEmpty()) {
             this.arena = BedWars.getInstance().getArenaHandler().getArenas().get(0);
         }
         this.loadTeams();
         this.checkMapVote();
     }
-    public void setDone(){
+
+    public void loadWorld() {
+        try {
+            File sourceDirectory = new File(arena.getName());
+            File destinationDirectory = new File("world");
+            FileUtils.copyDirectory(sourceDirectory, destinationDirectory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteOldMap() {
+        World world = Bukkit.getWorld("world");
+        Bukkit.unloadWorld(world, true);
+        File worldFolder = new File("world");
+        try {
+            FileUtils.deleteDirectory(worldFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Location> getBlocks() {
+        return blocks;
+    }
+
+    public void setDone() {
         isDone = true;
     }
+
     public void manageGameStart() {
         int players = Bukkit.getOnlinePlayers().size();
         int neededPlayers = ConfigEntries.PLAYERSPERTEAM.getAsInt() * ConfigEntries.TEAMS.getAsInt() / 2;
@@ -98,7 +131,6 @@ public class GameHandler {
     public void loadResults() {
         Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8GOLD: §a" + getGoldVotingResults().toString());
         Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8WEB: §a" + getWebVotingResults().toString());
-        System.out.println(getMapVoteResult());
         Bukkit.broadcastMessage(BedWars.getInstance().getPrefix() + "§8ARENA: §a" + getMapVoteResult().getDisplayname());
     }
 
@@ -106,6 +138,7 @@ public class GameHandler {
         Arena arena = this.arena;
         for (Team team : this.teams) {
             for (Player member : team.getMembers()) {
+                new PlayerStats(member.getUniqueId().toString()).add(PlayerStatsType.PLAYEDGAMES, 1);
                 member.teleport(BedWars.getInstance().getLocationHandler().getLocByName(arena.getSpawns().get(team.getTeam().getId())).getAsLocation());
             }
         }
@@ -116,7 +149,6 @@ public class GameHandler {
             Arena most = null;
             int arenavotes = -1;
             for (Arena arena : mapVote.getVotes().keySet()) {
-                System.out.println(arena.getName());
                 if (mapVote.getVotes().get(arena) > arenavotes) {
                     arenavotes = mapVote.getVotes().get(arena);
                     most = arena;
@@ -349,5 +381,13 @@ public class GameHandler {
 
     public Arena getArena() {
         return this.arena;
+    }
+
+    public Map<Player, Integer> getKills() {
+        return kills;
+    }
+
+    public Map<Player, Integer> getBeds() {
+        return beds;
     }
 }

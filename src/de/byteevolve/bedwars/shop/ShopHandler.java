@@ -23,7 +23,7 @@ public class ShopHandler {
 
     private Inventory setupShop() {
         Inventory inventory = Bukkit.createInventory(null, 9 * 6, "§aShop");
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             ItemStack itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(8).setName("§r").build();
             switch (i) {
                 case 1:
@@ -48,13 +48,13 @@ public class ShopHandler {
                     itemStack = new ItemBuilder(Material.valueOf(ShopEntry.TAB7.getValue().toString().split(",")[1]), 1).setName(ShopEntry.TAB7.getValue().toString().split(",")[0].replace("&", "§")).build();
                     break;
                 default:
-                    itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(8).setName("§r").build();
+                    itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(7).setName("§r").build();
                     break;
             }
             inventory.setItem(i, itemStack);
         }
         for (int i = 45; i < 9 * 6; i++) {
-            ItemStack itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(8).setName("§r").build();
+            ItemStack itemStack = new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(7).setName("§r").build();
             inventory.setItem(i, itemStack);
         }
 
@@ -171,7 +171,9 @@ public class ShopHandler {
                     int price = Integer.parseInt(shopEntry.getValue().toString().split(",")[3]);
                     int subid = Integer.parseInt(shopEntry.getValue().toString().split(",")[2]);
                     String currency = shopEntry.getValue().toString().split(",")[4];
-                    if (slot % 9 == 0) {
+                    if (slot == 25) {
+                        ++slot;
+                        ++slot;
                         ++slot;
                         inventory.setItem(slot, (new ItemBuilder(material, 1)).setName(shopEntry.getValue().toString().split(",")[1].replace("&", "§")).setSubId(subid).addLore(this.getPrice(price, currency)).build());
                     } else {

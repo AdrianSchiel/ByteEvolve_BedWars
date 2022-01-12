@@ -14,7 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.material.Bed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,7 +206,7 @@ public class PlayerHandler {
             inventory.setItem(i, new ItemBuilder(Material.STAINED_GLASS_PANE, 1).setSubId(7).setName(" ").build());
         }
         inventory.setItem(49, new ItemBuilder(Material.INK_SACK, 1).setSubId(10).setName("§aSpawn setzen").addLore("§aType: " + material.toString()).build());
-        
+
     }
 
 
